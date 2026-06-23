@@ -72,6 +72,14 @@ struct TrackingView: View {
     private var totalBottleML: Int {
         todaysFeedings.reduce(0) { $0 + ($1.amountML ?? 0) }
     }
+    /// Beslenme özet alt satırı — biberon ml ve/veya emzirme süresini birleştirir.
+    /// (Önceden süre tek başına gösteriliyordu; biberon-only günlerde "0 sn" çıkıyordu.)
+    private var feedingSummaryDetail: String {
+        var parts: [String] = []
+        if totalBottleML > 0 { parts.append("\(totalBottleML) ml") }
+        if totalFeedingSeconds > 0 { parts.append(DurationFormatter.string(fromSeconds: totalFeedingSeconds)) }
+        return parts.isEmpty ? "—" : parts.joined(separator: " · ")
+    }
     private var totalSleepSeconds: Int {
         todaysSleeps.reduce(0) { $0 + $1.durationSeconds }
     }
@@ -292,8 +300,8 @@ struct TrackingView: View {
                     icon: "drop.fill",
                     color: .blue,
                     title: "Beslenme",
-                    primary: DurationFormatter.string(fromSeconds: totalFeedingSeconds),
-                    secondary: totalBottleML > 0 ? "+ \(totalBottleML) ml" : "\(todaysFeedings.count) öğün"
+                    primary: "\(todaysFeedings.count) öğün",
+                    secondary: feedingSummaryDetail
                 )
                 summaryCard(
                     icon: "moon.zzz.fill",
