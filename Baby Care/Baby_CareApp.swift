@@ -10,9 +10,22 @@ import SwiftData
 
 @main
 struct Baby_CareApp: App {
-    var sharedModelContainer: ModelContainer = {
+    @State private var selectedBabyStore = SelectedBabyStore()
+    @State private var nightModeStore = NightModeStore()
+
+    /// AppIntents (App Shortcuts) tarafından erişilen paylaşımlı container.
+    static let sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            Baby.self,
+            FeedingRecord.self,
+            SleepRecord.self,
+            DiaperRecord.self,
+            VaccinationRecord.self,
+            GrowthRecord.self,
+            Medication.self,
+            MedicationDose.self,
+            PediatricContact.self,
+            BreastMilkBatch.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -25,8 +38,12 @@ struct Baby_CareApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
+                .environment(selectedBabyStore)
+                .environment(nightModeStore)
+                .preferredColorScheme(nightModeStore.isActive ? .dark : nil)
+                .tint(nightModeStore.isActive ? .red : .pink)
         }
-        .modelContainer(sharedModelContainer)
+        .modelContainer(Self.sharedModelContainer)
     }
 }
