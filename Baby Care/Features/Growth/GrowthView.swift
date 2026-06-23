@@ -11,6 +11,7 @@ struct GrowthView: View {
     @State private var selectedMetric: WHOPercentiles.Metric = .weight
     @State private var showAddSheet = false
     @State private var editingRecord: GrowthRecord?
+    @State private var animateChart = false
 
     private var records: [GrowthRecord] {
         allGrowth.filter { $0.babyID == baby.id }
@@ -140,13 +141,17 @@ struct GrowthView: View {
                         y: .value(selectedMetric.title, value)
                     )
                     .foregroundStyle(.pink)
-                    .symbolSize(80)
+                    .symbolSize(animateChart ? 80 : 0)
+                    .opacity(animateChart ? 1 : 0)
                 }
             }
         }
         .chartXAxisLabel("Ay")
         .chartYAxisLabel(unit)
         .chartXScale(domain: 0...6)
+        .animation(.easeOut(duration: 0.6), value: animateChart)
+        .animation(.spring(response: 0.5, dampingFraction: 0.85), value: selectedMetric)
+        .onAppear { animateChart = true }
     }
 
     private func ageMonths(at date: Date) -> Double {

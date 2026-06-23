@@ -7,6 +7,10 @@ struct BabyProfileView: View {
     @Query(sort: \GrowthRecord.recordedAt) private var allGrowth: [GrowthRecord]
     @Query(sort: \VaccinationRecord.scheduledDate) private var allVaccinations: [VaccinationRecord]
     @Query(sort: \Medication.createdAt) private var allMedications: [Medication]
+    @Query(sort: \FeedingRecord.startedAt, order: .reverse) private var allFeedings: [FeedingRecord]
+    @Query(sort: \SleepRecord.startedAt, order: .reverse) private var allSleeps: [SleepRecord]
+    @Query(sort: \DiaperRecord.recordedAt, order: .reverse) private var allDiapers: [DiaperRecord]
+    @Query(sort: \BreastMilkBatch.pumpedAt, order: .reverse) private var allMilk: [BreastMilkBatch]
 
     @Environment(\.modelContext) private var modelContext
 
@@ -201,13 +205,31 @@ struct BabyProfileView: View {
     }
 
     private func generatePDF(for baby: Baby) {
-        let growth = allGrowth.filter { $0.babyID == baby.id }
-        let vaccs = allVaccinations.filter { $0.babyID == baby.id }
-        let meds = allMedications.filter { $0.babyID == baby.id && $0.endedAt == nil }
+        let id = baby.id
+        let feedings = allFeedings.filter { $0.babyID == id }
+        let sleeps = allSleeps.filter { $0.babyID == id }
+        let diapers = allDiapers.filter { $0.babyID == id }
+        let growth = allGrowth.filter { $0.babyID == id }
+        let vaccs = allVaccinations.filter { $0.babyID == id }
+        let meds = allMedications.filter { $0.babyID == id && $0.endedAt == nil }
+        let milk = allMilk.filter { $0.babyID == id }
 
+        let df = DateFormatter()
+        df.dateFormat = "yyyy-MM-dd"
+        let dateStamp = df.string(from: .now)
         let safeName = baby.name.replacingOccurrences(of: " ", with: "_")
-        let url = PDFReportGenerator.generate(fileName: "BabyCare_\(safeName)") {
-            PDFReportView(baby: baby, growth: growth, vaccinations: vaccs, medications: meds)
+
+        let url = PDFReportGenerator.generate(fileName: "BabyCare_\(safeName)_\(dateStamp)") {
+            PDFReportView(
+                baby: baby,
+                feedings: feedings,
+                sleeps: sleeps,
+                diapers: diapers,
+                growth: growth,
+                vaccinations: vaccs,
+                medications: meds,
+                milkBatches: milk
+            )
         }
         if let url {
             pdfBabyName = baby.name

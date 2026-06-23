@@ -1,56 +1,68 @@
 import SwiftUI
 
-/// PDF olarak render edilen sayfa içeriği.
-/// Ekranda gösterilmek için tasarlanmamıştır — sadece PDFReportGenerator tarafından kullanılır.
+/// PDF olarak render edilen rapor içeriği — bebeğin tüm tutulan verilerini kapsar.
+/// Ekranda gösterilmek için tasarlanmamıştır; yalnızca PDFReportGenerator kullanır.
+/// Çok sayfalı çıktıyı PDFReportGenerator pagination ile üretir.
 struct PDFReportView: View {
     let baby: Baby
-    let growth: [GrowthRecord]
+    let feedings: [FeedingRecord]      // tarihe göre azalan (yeni → eski)
+    let sleeps: [SleepRecord]          // tarihe göre azalan
+    let diapers: [DiaperRecord]        // tarihe göre azalan
+    let growth: [GrowthRecord]         // tarihe göre artan
     let vaccinations: [VaccinationRecord]
     let medications: [Medication]
+    let milkBatches: [BreastMilkBatch]  // tarihe göre azalan
+
+    private let cal = Calendar.current
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             header
             babySection
+            trackingSummarySection
             if !growth.isEmpty { growthSection }
             if !vaccinations.isEmpty { vaccinationSection }
             if !medications.isEmpty { medicationSection }
+            if !milkBatches.isEmpty { milkSection }
+            recentLogsSection
             footer
         }
         .foregroundStyle(.black)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
+
+    // MARK: - Header
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 4) {
-            HStack {
-                Image(systemName: "figure.and.child.holdinghands")
-                    .font(.title)
-                    .foregroundStyle(.pink)
+            HStack(spacing: 10) {
+                Image("AppLogo")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 44, height: 44)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
                 Text("Baby Care — Bebek Bakım Raporu")
                     .font(.title2.bold())
                 Spacer()
             }
-            Text("Oluşturulma: \(DateFormatters.displayDate.string(from: .now))")
+            Text("Oluşturulma: \(dateTime(.now))")
                 .font(.caption)
                 .foregroundStyle(.gray)
             Divider()
         }
     }
 
+    // MARK: - Baby
+
     private var babySection: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("Bebek Bilgileri")
-                .font(.headline)
+            Text("Bebek Bilgileri").font(.headline)
             row("Ad", baby.name)
             row("Doğum Tarihi", DateFormatters.displayDate.string(from: baby.birthDate))
             row("Yaş", ageText)
             row("Cinsiyet", baby.sex.localizedTitle)
-            if let w = baby.birthWeightGrams {
-                row("Doğum Kilosu", "\(w) g")
-            }
-            if let l = baby.birthLengthCm {
-                row("Doğum Boyu", String(format: "%.1f cm", l))
-            }
+            if let w = baby.birthWeightGrams { row("Doğum Kilosu", "\(w) g") }
+            if let l = baby.birthLengthCm { row("Doğum Boyu", String(format: "%.1f cm", l)) }
             Divider()
         }
     }
@@ -63,10 +75,82 @@ struct PDFReportView: View {
         return "\(baby.ageInMonths) aylık"
     }
 
+    // MARK: - Tracking summary
+
+    private struct DayRow: Identifiable {
+        let id = UUID()
+        let date: Date
+        let feeds: Int
+        let ml: Int
+        let sleepH: Double
+        let diapers: Int
+    }
+
+    private var totalMl: Int { feedings.reduce(0) { $0 + ($1.amountML ?? 0) } }
+    private var totalSleepSeconds: Int { sleeps.reduce(0) { $0 + $1.durationSeconds } }
+
+    private var dailyRows: [DayRow] {
+        let days = Set(
+            feedings.map { cal.startOfDay(for: $0.startedAt) }
+            + sleeps.map { cal.startOfDay(for: $0.startedAt) }
+            + diapers.map { cal.startOfDay(for: $0.recordedAt) }
+        )
+        return days.sorted(by: >).prefix(30).map { day in
+            let f = feedings.filter { cal.isDate($0.startedAt, inSameDayAs: day) }
+            let s = sleeps.filter { cal.isDate($0.startedAt, inSameDayAs: day) }
+            let d = diapers.filter { cal.isDate($0.recordedAt, inSameDayAs: day) }
+            return DayRow(
+                date: day,
+                feeds: f.count,
+                ml: f.reduce(0) { $0 + ($1.amountML ?? 0) },
+                sleepH: Double(s.reduce(0) { $0 + $1.durationSeconds }) / 3600.0,
+                diapers: d.count
+            )
+        }
+    }
+
+    private var trackingSummarySection: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text("Takip Özeti").font(.headline)
+            row("Toplam beslenme", "\(feedings.count) öğün" + (totalMl > 0 ? " · \(totalMl) ml" : ""))
+            row("Toplam uyku", DurationFormatter.string(fromSeconds: totalSleepSeconds))
+            row("Toplam bez", "\(diapers.count) değişim")
+
+            let rows = dailyRows
+            if !rows.isEmpty {
+                Text("Günlük Dağılım (son \(rows.count) gün)")
+                    .font(.subheadline).bold()
+                    .padding(.top, 4)
+                HStack {
+                    Text("Tarih").bold().frame(width: 110, alignment: .leading)
+                    Text("Beslenme").bold().frame(width: 100, alignment: .leading)
+                    Text("Uyku").bold().frame(width: 70, alignment: .leading)
+                    Text("Bez").bold().frame(width: 50, alignment: .leading)
+                }
+                .font(.caption)
+                ForEach(rows) { r in
+                    HStack {
+                        Text(DateFormatters.displayDate.string(from: r.date))
+                            .frame(width: 110, alignment: .leading)
+                        Text(r.ml > 0 ? "\(r.feeds) · \(r.ml)ml" : "\(r.feeds)")
+                            .frame(width: 100, alignment: .leading)
+                        Text(String(format: "%.1f sa", r.sleepH))
+                            .frame(width: 70, alignment: .leading)
+                        Text("\(r.diapers)")
+                            .frame(width: 50, alignment: .leading)
+                    }
+                    .font(.caption)
+                }
+            }
+            Divider()
+        }
+    }
+
+    // MARK: - Growth
+
     private var growthSection: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("Büyüme Ölçümleri")
-                .font(.headline)
+            Text("Büyüme Ölçümleri").font(.headline)
             HStack {
                 Text("Tarih").bold().frame(width: 120, alignment: .leading)
                 Text("Kilo").bold().frame(width: 80, alignment: .leading)
@@ -74,7 +158,7 @@ struct PDFReportView: View {
                 Text("Baş Çevresi").bold().frame(width: 100, alignment: .leading)
             }
             .font(.caption)
-            ForEach(growth.suffix(10)) { g in
+            ForEach(growth) { g in
                 HStack {
                     Text(DateFormatters.displayDate.string(from: g.recordedAt))
                         .frame(width: 120, alignment: .leading)
@@ -91,10 +175,11 @@ struct PDFReportView: View {
         }
     }
 
+    // MARK: - Vaccination
+
     private var vaccinationSection: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("Aşı Takvimi")
-                .font(.headline)
+            Text("Aşı Takvimi").font(.headline)
 
             let completed = vaccinations.filter { $0.completedDate != nil }
             let pending = vaccinations.filter { $0.completedDate == nil }
@@ -104,15 +189,12 @@ struct PDFReportView: View {
                 ForEach(completed) { v in
                     HStack(alignment: .top) {
                         Image(systemName: "checkmark.circle.fill")
-                            .foregroundStyle(.green)
-                            .font(.caption)
+                            .foregroundStyle(.green).font(.caption)
                         VStack(alignment: .leading, spacing: 1) {
-                            Text(v.definition?.shortName ?? v.vaccineDefinitionID)
-                                .font(.caption.bold())
+                            Text(v.definition?.shortName ?? v.vaccineDefinitionID).font(.caption.bold())
                             if let done = v.completedDate {
                                 Text("Yapıldı: \(DateFormatters.displayDate.string(from: done))")
-                                    .font(.caption2)
-                                    .foregroundStyle(.gray)
+                                    .font(.caption2).foregroundStyle(.gray)
                             }
                         }
                     }
@@ -123,15 +205,11 @@ struct PDFReportView: View {
                 Text("Yaklaşan / Bekleyen").font(.subheadline).bold()
                 ForEach(pending) { v in
                     HStack(alignment: .top) {
-                        Image(systemName: "circle")
-                            .foregroundStyle(.orange)
-                            .font(.caption)
+                        Image(systemName: "circle").foregroundStyle(.orange).font(.caption)
                         VStack(alignment: .leading, spacing: 1) {
-                            Text(v.definition?.shortName ?? v.vaccineDefinitionID)
-                                .font(.caption.bold())
+                            Text(v.definition?.shortName ?? v.vaccineDefinitionID).font(.caption.bold())
                             Text("Planlanan: \(DateFormatters.displayDate.string(from: v.scheduledDate))")
-                                .font(.caption2)
-                                .foregroundStyle(.gray)
+                                .font(.caption2).foregroundStyle(.gray)
                         }
                     }
                 }
@@ -140,15 +218,14 @@ struct PDFReportView: View {
         }
     }
 
+    // MARK: - Medication
+
     private var medicationSection: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("Vitamin & İlaç")
-                .font(.headline)
+            Text("Vitamin & İlaç").font(.headline)
             ForEach(medications) { m in
                 HStack(alignment: .top) {
-                    Image(systemName: m.icon)
-                        .foregroundStyle(.orange)
-                        .font(.caption)
+                    Image(systemName: m.icon).foregroundStyle(.orange).font(.caption)
                     VStack(alignment: .leading, spacing: 1) {
                         Text(m.name).font(.caption.bold())
                         Text(m.dosageText).font(.caption2).foregroundStyle(.gray)
@@ -159,30 +236,91 @@ struct PDFReportView: View {
         }
     }
 
-    private func row(_ key: String, _ value: String) -> some View {
-        HStack {
-            Text(key + ":")
-                .font(.caption)
-                .foregroundStyle(.gray)
-                .frame(width: 110, alignment: .leading)
-            Text(value)
-                .font(.caption)
-            Spacer()
+    // MARK: - Milk storage
+
+    private var milkSection: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text("Sağılmış Süt Saklama").font(.headline)
+            ForEach(milkBatches) { b in
+                let state = b.isUsed ? "kullanıldı" : (b.isExpired ? "süresi doldu" : "aktif")
+                Text("• \(DateFormatters.displayDate.string(from: b.pumpedAt)) — \(b.amountML) ml · \(b.storage.localizedTitle) · \(state)")
+                    .font(.caption2)
+            }
+            Divider()
         }
     }
+
+    // MARK: - Recent detailed logs
+
+    private var recentLogsSection: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text("Son Kayıtlar (detay)").font(.headline)
+
+            if !feedings.isEmpty {
+                Text("Beslenme — son \(min(20, feedings.count))").font(.subheadline).bold()
+                ForEach(feedings.prefix(20)) { f in
+                    Text("• \(dateTime(f.startedAt)) — \(feedingDesc(f))").font(.caption2)
+                }
+            }
+            if !sleeps.isEmpty {
+                Text("Uyku — son \(min(20, sleeps.count))").font(.subheadline).bold().padding(.top, 2)
+                ForEach(sleeps.prefix(20)) { s in
+                    Text("• \(dateTime(s.startedAt)) — \(sleepDesc(s))").font(.caption2)
+                }
+            }
+            if !diapers.isEmpty {
+                Text("Bez — son \(min(20, diapers.count))").font(.subheadline).bold().padding(.top, 2)
+                ForEach(diapers.prefix(20)) { d in
+                    let extra = d.consistency.map { " (\($0.localizedTitle))" } ?? ""
+                    Text("• \(dateTime(d.recordedAt)) — \(d.type.localizedTitle)\(extra)").font(.caption2)
+                }
+            }
+            Divider()
+        }
+    }
+
+    // MARK: - Footer
 
     private var footer: some View {
         VStack(alignment: .leading, spacing: 4) {
             Divider()
             Text("Kaynak: T.C. Sağlık Bakanlığı GBP 2026, DSÖ Çocuk Büyüme Standartları.")
-                .font(.caption2)
-                .foregroundStyle(.gray)
+                .font(.caption2).foregroundStyle(.gray)
             Text("Bu rapor bilgilendirme amaçlıdır, hekim değerlendirmesinin yerini tutmaz.")
-                .font(.caption2)
-                .foregroundStyle(.gray)
+                .font(.caption2).foregroundStyle(.gray)
             Text("Baby Care 1.0")
-                .font(.caption2)
-                .foregroundStyle(.gray)
+                .font(.caption2).foregroundStyle(.gray)
         }
+    }
+
+    // MARK: - Helpers
+
+    private func row(_ key: String, _ value: String) -> some View {
+        HStack {
+            Text(key + ":")
+                .font(.caption).foregroundStyle(.gray)
+                .frame(width: 130, alignment: .leading)
+            Text(value).font(.caption)
+            Spacer()
+        }
+    }
+
+    private func dateTime(_ date: Date) -> String {
+        DateFormatters.displayDate.string(from: date) + " " + DateFormatters.displayTime.string(from: date)
+    }
+
+    private func feedingDesc(_ f: FeedingRecord) -> String {
+        if let dur = f.durationSeconds {
+            return "\(f.type.localizedTitle) · \(DurationFormatter.string(fromSeconds: dur))"
+        }
+        if let ml = f.amountML {
+            return "\(f.type.localizedTitle) · \(ml) ml"
+        }
+        return f.type.localizedTitle
+    }
+
+    private func sleepDesc(_ s: SleepRecord) -> String {
+        if s.isOngoing { return "Devam ediyor" }
+        return "\(s.isNap ? "Gündüz" : "Gece") · \(DurationFormatter.string(fromSeconds: s.durationSeconds))"
     }
 }

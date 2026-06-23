@@ -191,4 +191,32 @@ enum NotificationService {
     static func cancelWeeklySummary() {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["weekly_summary"])
     }
+
+    // MARK: - Weekly growth measurement reminder (Pazar 10:00)
+
+    static func scheduleWeeklyGrowthReminder() async {
+        let center = UNUserNotificationCenter.current()
+        center.removePendingNotificationRequests(withIdentifiers: ["weekly_growth"])
+
+        let granted = await requestAuthorizationIfNeeded()
+        guard granted else { return }
+
+        let content = UNMutableNotificationContent()
+        content.title = "Baby Care — Büyüme Ölçümü"
+        content.body = "Haftalık ölçüm zamanı: bebeğinizin kilo, boy ve baş çevresini kaydedin."
+        content.sound = .default
+
+        var components = DateComponents()
+        components.weekday = 1   // Pazar
+        components.hour = 10
+        components.minute = 0
+
+        let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
+        let request = UNNotificationRequest(identifier: "weekly_growth", content: content, trigger: trigger)
+        try? await center.add(request)
+    }
+
+    static func cancelWeeklyGrowthReminder() {
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["weekly_growth"])
+    }
 }

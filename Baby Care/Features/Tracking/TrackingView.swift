@@ -13,6 +13,11 @@ struct TrackingView: View {
     @State private var showFeedingSheet = false
     @State private var showSleepSheet = false
     @State private var showDiaperSheet = false
+    @State private var showDiaperDialog = false
+    @State private var showFeedingAmount = false
+    @State private var feedingAmountText = ""
+    @State private var quickError: String?
+    @State private var selectedDate: Date = .now
 
     @State private var editingFeeding: FeedingRecord?
     @State private var editingSleep: SleepRecord?
@@ -21,24 +26,43 @@ struct TrackingView: View {
     private var baby: Baby? { babyStore.resolved(from: babies) }
     private var babyID: UUID? { baby?.id }
 
+    private var isViewingToday: Bool {
+        Calendar.current.isDateInToday(selectedDate)
+    }
+
+    private var dayLabel: String {
+        let cal = Calendar.current
+        if cal.isDateInToday(selectedDate) { return "Bugün" }
+        if cal.isDateInYesterday(selectedDate) { return "Dün" }
+        return DateFormatters.displayDate.string(from: selectedDate)
+    }
+
+    private func shiftDay(by days: Int) {
+        // Gelecek güne gitmeye izin verme
+        if days > 0 && isViewingToday { return }
+        if let d = Calendar.current.date(byAdding: .day, value: days, to: selectedDate) {
+            selectedDate = min(d, .now)
+        }
+    }
+
     private var todaysFeedings: [FeedingRecord] {
         guard let id = babyID else { return [] }
         return allFeedings.filter {
-            $0.babyID == id && Calendar.current.isDateInToday($0.startedAt)
+            $0.babyID == id && Calendar.current.isDate($0.startedAt, inSameDayAs: selectedDate)
         }
     }
 
     private var todaysSleeps: [SleepRecord] {
         guard let id = babyID else { return [] }
         return allSleeps.filter {
-            $0.babyID == id && Calendar.current.isDateInToday($0.startedAt)
+            $0.babyID == id && Calendar.current.isDate($0.startedAt, inSameDayAs: selectedDate)
         }
     }
 
     private var todaysDiapers: [DiaperRecord] {
         guard let id = babyID else { return [] }
         return allDiapers.filter {
-            $0.babyID == id && Calendar.current.isDateInToday($0.recordedAt)
+            $0.babyID == id && Calendar.current.isDate($0.recordedAt, inSameDayAs: selectedDate)
         }
     }
 
@@ -74,11 +98,14 @@ struct TrackingView: View {
                         )
                         .padding(.top, 60)
                     } else {
-                        if ongoingFeeding != nil || ongoingSleep != nil {
+                        dateNavigator
+                        if isViewingToday, ongoingFeeding != nil || ongoingSleep != nil {
                             ongoingSection
                         }
                         summaryRow
-                        quickAddRow
+                        if isViewingToday {
+                            quickAddRow
+                        }
                         recentActivitiesSection
                     }
                 }
@@ -89,6 +116,15 @@ struct TrackingView: View {
                 if babies.count > 1 {
                     ToolbarItem(placement: .principal) {
                         BabyPickerToolbarMenu(babies: babies, selected: baby)
+                    }
+                }
+                if let baby {
+                    ToolbarItem(placement: .primaryAction) {
+                        NavigationLink {
+                            WeeklyChartsView(baby: baby)
+                        } label: {
+                            Image(systemName: "chart.bar.xaxis")
+                        }
                     }
                 }
             }
@@ -191,25 +227,63 @@ struct TrackingView: View {
     }
 
     private func stopFeeding(_ f: FeedingRecord) {
-        let now = Date()
-        f.endedAt = now
-        f.durationSeconds = max(1, Int(now.timeIntervalSince(f.startedAt)))
-        f.updatedAt = now
-        try? modelContext.save()
+        guard let baby else { return }
+        do {
+            try QuickLogService.toggleFeeding(for: baby, ongoing: f, in: modelContext)
+            Haptics.success()
+        } catch {
+            quickError = error.localizedDescription
+        }
     }
 
     private func stopSleep(_ s: SleepRecord) {
-        let now = Date()
-        s.endedAt = now
-        s.updatedAt = now
-        try? modelContext.save()
+        guard let baby else { return }
+        do {
+            try QuickLogService.toggleSleep(for: baby, ongoing: s, in: modelContext)
+            Haptics.success()
+        } catch {
+            quickError = error.localizedDescription
+        }
+    }
+
+    // MARK: - Date navigator
+
+    private var dateNavigator: some View {
+        HStack {
+            Button { shiftDay(by: -1) } label: {
+                Image(systemName: "chevron.left").font(.headline)
+            }
+            .buttonStyle(.plain)
+
+            Spacer()
+
+            VStack(spacing: 2) {
+                Text(dayLabel).font(.headline)
+                if !isViewingToday {
+                    Button("Bugüne dön") { selectedDate = .now }
+                        .font(.caption)
+                }
+            }
+
+            Spacer()
+
+            Button { shiftDay(by: 1) } label: {
+                Image(systemName: "chevron.right")
+                    .font(.headline)
+                    .foregroundStyle(isViewingToday ? .secondary : .primary)
+            }
+            .buttonStyle(.plain)
+            .disabled(isViewingToday)
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 4)
     }
 
     // MARK: - Summary row
 
     private var summaryRow: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Bugün")
+            Text(dayLabel)
                 .font(.headline)
                 .foregroundStyle(.secondary)
 
@@ -263,38 +337,135 @@ struct TrackingView: View {
 
     private var quickAddRow: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Hızlı Ekle")
-                .font(.headline)
-                .foregroundStyle(.secondary)
-            HStack(spacing: 12) {
-                quickButton(title: "Beslenme", icon: "drop.fill", color: .blue) {
-                    showFeedingSheet = true
-                }
-                quickButton(title: "Uyku", icon: "moon.zzz.fill", color: .indigo) {
-                    showSleepSheet = true
-                }
-                quickButton(title: "Bez", icon: "leaf.fill", color: .green) {
-                    showDiaperSheet = true
-                }
+            HStack {
+                Text("Hızlı Ekle")
+                    .font(.headline)
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Text("Detay için basılı tutun")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
             }
+            HStack(spacing: 12) {
+                quickButton(
+                    title: "Beslenme",
+                    icon: "drop.fill",
+                    color: .blue,
+                    isActive: false,
+                    tap: { feedingAmountText = ""; showFeedingAmount = true },
+                    long: { showFeedingSheet = true }
+                )
+                quickButton(
+                    title: ongoingSleep == nil ? "Uyku" : "Uyku Sürüyor",
+                    icon: ongoingSleep == nil ? "moon.zzz.fill" : "moon.zzz",
+                    color: .indigo,
+                    isActive: ongoingSleep != nil,
+                    tap: { quickSleep() },
+                    long: { showSleepSheet = true }
+                )
+                quickButton(
+                    title: "Bez",
+                    icon: "leaf.fill",
+                    color: .green,
+                    isActive: false,
+                    tap: { showDiaperDialog = true },
+                    long: { showDiaperSheet = true }
+                )
+            }
+        }
+        .confirmationDialog("Bez Değişimi", isPresented: $showDiaperDialog, titleVisibility: .visible) {
+            Button("Çiş") { quickDiaper(.pee) }
+            Button("Kaka") { quickDiaper(.poo) }
+            Button("Karışık") { quickDiaper(.both) }
+            Button("Vazgeç", role: .cancel) {}
+        } message: {
+            Text("Detaylı kayıt (kıvam, saat, not) için butonu basılı tutun.")
+        }
+        .alert("Kaç CC içti?", isPresented: $showFeedingAmount) {
+            TextField("Örn: 90", text: $feedingAmountText)
+                .numericKeyboard()
+            Button("Sağılmış süt") { saveFeedingAmount(.bottleBreastmilk) }
+            Button("Mama") { saveFeedingAmount(.bottleFormula) }
+            Button("Vazgeç", role: .cancel) { feedingAmountText = "" }
+        } message: {
+            Text("Miktarı yazıp süt türünü seçin. Süreli emzirme için butonu basılı tutun.")
+        }
+        .alert("Kaydedilemedi", isPresented: Binding(get: { quickError != nil }, set: { if !$0 { quickError = nil } })) {
+            Button("Tamam", role: .cancel) { quickError = nil }
+        } message: {
+            Text(quickError ?? "")
         }
     }
 
-    private func quickButton(title: String, icon: String, color: Color, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            VStack(spacing: 8) {
-                Image(systemName: icon)
-                    .font(.title2)
-                    .foregroundStyle(color)
-                Text(title)
-                    .font(.subheadline.weight(.medium))
-                    .foregroundStyle(.primary)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 14)
-            .background(color.opacity(0.12), in: .rect(cornerRadius: 14))
+    private func quickButton(
+        title: String,
+        icon: String,
+        color: Color,
+        isActive: Bool,
+        tap: @escaping () -> Void,
+        long: @escaping () -> Void
+    ) -> some View {
+        VStack(spacing: 8) {
+            Image(systemName: icon)
+                .font(.title2)
+                .foregroundStyle(isActive ? .white : color)
+            Text(title)
+                .font(.subheadline.weight(.medium))
+                .foregroundStyle(isActive ? .white : .primary)
+                .multilineTextAlignment(.center)
+                .lineLimit(2)
+                .minimumScaleFactor(0.8)
         }
-        .buttonStyle(.plain)
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 14)
+        .background(
+            isActive ? AnyShapeStyle(color.gradient) : AnyShapeStyle(color.opacity(0.12)),
+            in: .rect(cornerRadius: 14)
+        )
+        .contentShape(.rect)
+        .onTapGesture { tap() }
+        .onLongPressGesture(minimumDuration: 0.5) { long() }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(title)
+        .accessibilityHint("Dokun: hızlı kaydet. Basılı tut: detaylı ekle.")
+        .accessibilityAddTraits(.isButton)
+    }
+
+    // MARK: - Quick add actions
+
+    private func saveFeedingAmount(_ type: FeedingType) {
+        guard let baby else { return }
+        guard let ml = Int(feedingAmountText.trimmingCharacters(in: .whitespaces)), ml > 0 else {
+            quickError = "Geçerli bir CC miktarı girin."
+            return
+        }
+        do {
+            try QuickLogService.logBottle(type, amountML: ml, for: baby, in: modelContext)
+            Haptics.success()
+            feedingAmountText = ""
+        } catch {
+            quickError = error.localizedDescription
+        }
+    }
+
+    private func quickSleep() {
+        guard let baby else { return }
+        do {
+            try QuickLogService.toggleSleep(for: baby, ongoing: ongoingSleep, in: modelContext)
+            Haptics.success()
+        } catch {
+            quickError = error.localizedDescription
+        }
+    }
+
+    private func quickDiaper(_ type: DiaperType) {
+        guard let baby else { return }
+        do {
+            try QuickLogService.logDiaper(type, for: baby, in: modelContext)
+            Haptics.success()
+        } catch {
+            quickError = error.localizedDescription
+        }
     }
 
     // MARK: - Recent activities
@@ -401,11 +572,10 @@ struct TrackingView: View {
     }
 
     private func mergedRecentActivities(limit: Int) -> [ActivityItem] {
-        guard let id = babyID else { return [] }
-
         var items: [ActivityItem] = []
 
-        for f in allFeedings.filter({ $0.babyID == id }).prefix(limit) {
+        // todaysFeedings/Sleeps/Diapers seçili güne göre filtrelidir.
+        for f in todaysFeedings {
             let sub: String
             if let dur = f.durationSeconds {
                 sub = "\(f.type.localizedTitle) · \(DurationFormatter.string(fromSeconds: dur))"
@@ -422,7 +592,7 @@ struct TrackingView: View {
             ))
         }
 
-        for s in allSleeps.filter({ $0.babyID == id }).prefix(limit) {
+        for s in todaysSleeps {
             let sub: String
             if s.isOngoing {
                 sub = "Devam ediyor"
@@ -437,7 +607,7 @@ struct TrackingView: View {
             ))
         }
 
-        for d in allDiapers.filter({ $0.babyID == id }).prefix(limit) {
+        for d in todaysDiapers {
             items.append(.init(
                 id: d.id, timestamp: d.recordedAt,
                 title: "Bez", subtitle: d.type.localizedTitle,
@@ -446,9 +616,6 @@ struct TrackingView: View {
             ))
         }
 
-        return items
-            .sorted { $0.timestamp > $1.timestamp }
-            .prefix(limit)
-            .map { $0 }
+        return items.sorted { $0.timestamp > $1.timestamp }
     }
 }

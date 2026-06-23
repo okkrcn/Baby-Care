@@ -16,8 +16,9 @@ struct RootView: View {
             }
         }
         .task {
-            // Pazar 19:00 haftalık özet bildirimini bir kez planla
+            // Pazar 19:00 haftalık özet + Pazar 10:00 büyüme ölçüm hatırlatması
             await NotificationService.scheduleWeeklySummary()
+            await NotificationService.scheduleWeeklyGrowthReminder()
         }
     }
 }

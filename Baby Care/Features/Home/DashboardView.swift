@@ -10,9 +10,13 @@ struct DashboardView: View {
     @Query(sort: \SleepRecord.startedAt, order: .reverse) private var allSleeps: [SleepRecord]
     @Query(sort: \DiaperRecord.recordedAt, order: .reverse) private var allDiapers: [DiaperRecord]
     @Query(sort: \VaccinationRecord.scheduledDate) private var allVaccinations: [VaccinationRecord]
+    @Query(sort: \GrowthRecord.recordedAt, order: .reverse) private var allGrowth: [GrowthRecord]
 
     @State private var quickActionFeedback: String?
     @State private var feedbackOpacity: Double = 0
+    @State private var showDiaperDialog = false
+    @State private var showFeedingAmount = false
+    @State private var feedingAmountText = ""
 
     private var baby: Baby? { babyStore.resolved(from: babies) }
 
@@ -45,6 +49,7 @@ struct DashboardView: View {
                             nextVaccinationCard(next)
                         }
                         weeklySummaryCard(baby: baby)
+                        growthCard(baby: baby)
                         lastActivitiesSection(baby: baby)
                         tipSection(baby: baby)
                     } else {
@@ -159,12 +164,13 @@ struct DashboardView: View {
                 }
 
                 quickAction(
-                    title: ongoingFeeding == nil ? "Emzirme" : "Emzirme Sürüyor",
-                    icon: ongoingFeeding == nil ? "drop.fill" : "drop",
+                    title: "Beslenme",
+                    icon: "drop.fill",
                     color: .blue,
-                    isActive: ongoingFeeding != nil
+                    isActive: false
                 ) {
-                    toggleFeeding(for: baby)
+                    feedingAmountText = ""
+                    showFeedingAmount = true
                 }
 
                 quickAction(
@@ -173,7 +179,7 @@ struct DashboardView: View {
                     color: .green,
                     isActive: false
                 ) {
-                    logDiaper(for: baby)
+                    showDiaperDialog = true
                 }
             }
 
@@ -184,6 +190,21 @@ struct DashboardView: View {
                     .opacity(feedbackOpacity)
                     .animation(.easeInOut(duration: 0.3), value: feedbackOpacity)
             }
+        }
+        .confirmationDialog("Bez Değişimi", isPresented: $showDiaperDialog, titleVisibility: .visible) {
+            Button("Çiş") { logDiaper(.pee, for: baby) }
+            Button("Kaka") { logDiaper(.poo, for: baby) }
+            Button("Karışık") { logDiaper(.both, for: baby) }
+            Button("Vazgeç", role: .cancel) {}
+        }
+        .alert("Kaç CC içti?", isPresented: $showFeedingAmount) {
+            TextField("Örn: 90", text: $feedingAmountText)
+                .numericKeyboard()
+            Button("Sağılmış süt") { saveFeedingAmount(.bottleBreastmilk, for: baby) }
+            Button("Mama") { saveFeedingAmount(.bottleFormula, for: baby) }
+            Button("Vazgeç", role: .cancel) { feedingAmountText = "" }
+        } message: {
+            Text("Miktarı yazıp süt türünü seçin.")
         }
     }
 
@@ -211,49 +232,38 @@ struct DashboardView: View {
     }
 
     private func toggleSleep(for baby: Baby) {
-        if let ongoing = ongoingSleep {
-            ongoing.endedAt = .now
-            ongoing.updatedAt = .now
-            try? modelContext.save()
-            showFeedback("Uyku bitirildi: \(DurationFormatter.string(fromSeconds: ongoing.durationSeconds))")
-        } else {
-            let hour = Calendar.current.component(.hour, from: .now)
-            let isNap = hour >= 7 && hour < 19
-            let record = SleepRecord(babyID: baby.id, startedAt: .now, endedAt: nil, isNap: isNap)
-            modelContext.insert(record)
-            try? modelContext.save()
-            showFeedback("Uyku başlatıldı")
+        do {
+            let msg = try QuickLogService.toggleSleep(for: baby, ongoing: ongoingSleep, in: modelContext)
+            Haptics.success()
+            showFeedback(msg)
+        } catch {
+            showFeedback("Kaydedilemedi: \(error.localizedDescription)")
         }
     }
 
-    private func toggleFeeding(for baby: Baby) {
-        if let ongoing = ongoingFeeding {
-            let now = Date()
-            ongoing.endedAt = now
-            ongoing.durationSeconds = max(1, Int(now.timeIntervalSince(ongoing.startedAt)))
-            ongoing.updatedAt = now
-            try? modelContext.save()
-            showFeedback("Emzirme bitirildi: \(DurationFormatter.string(fromSeconds: ongoing.durationSeconds ?? 0))")
-        } else {
-            let record = FeedingRecord(
-                babyID: baby.id,
-                type: .breast,
-                startedAt: .now,
-                endedAt: nil,
-                durationSeconds: nil,
-                side: .left
-            )
-            modelContext.insert(record)
-            try? modelContext.save()
-            showFeedback("Emzirme başlatıldı (sol)")
+    private func saveFeedingAmount(_ type: FeedingType, for baby: Baby) {
+        guard let ml = Int(feedingAmountText.trimmingCharacters(in: .whitespaces)), ml > 0 else {
+            showFeedback("Geçerli bir CC miktarı girin.")
+            return
+        }
+        do {
+            let msg = try QuickLogService.logBottle(type, amountML: ml, for: baby, in: modelContext)
+            Haptics.success()
+            showFeedback(msg)
+            feedingAmountText = ""
+        } catch {
+            showFeedback("Kaydedilemedi: \(error.localizedDescription)")
         }
     }
 
-    private func logDiaper(for baby: Baby) {
-        let record = DiaperRecord(babyID: baby.id, recordedAt: .now, type: .pee)
-        modelContext.insert(record)
-        try? modelContext.save()
-        showFeedback("Bez değişimi kaydedildi (çiş)")
+    private func logDiaper(_ type: DiaperType, for baby: Baby) {
+        do {
+            let msg = try QuickLogService.logDiaper(type, for: baby, in: modelContext)
+            Haptics.success()
+            showFeedback(msg)
+        } catch {
+            showFeedback("Kaydedilemedi: \(error.localizedDescription)")
+        }
     }
 
     private func showFeedback(_ message: String) {
@@ -353,6 +363,57 @@ struct DashboardView: View {
             .background(.teal.opacity(0.06), in: .rect(cornerRadius: 14))
         }
         .buttonStyle(.plain)
+    }
+
+    // MARK: - Growth card
+
+    private var latestGrowth: GrowthRecord? {
+        guard let id = baby?.id else { return nil }
+        return allGrowth.first { $0.babyID == id }
+    }
+
+    private func growthCard(baby: Baby) -> some View {
+        NavigationLink {
+            GrowthView(baby: baby)
+        } label: {
+            HStack(spacing: 12) {
+                Image(systemName: "chart.line.uptrend.xyaxis")
+                    .font(.title2)
+                    .foregroundStyle(.purple)
+                    .frame(width: 44, height: 44)
+                    .background(.purple.opacity(0.15), in: .circle)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Büyüme & Ölçüm")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.primary)
+                    if let g = latestGrowth {
+                        Text(growthSummary(g))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    } else {
+                        Text("Henüz ölçüm yok — eklemek için dokun")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .foregroundStyle(.secondary)
+                    .font(.caption)
+            }
+            .padding()
+            .background(.purple.opacity(0.06), in: .rect(cornerRadius: 14))
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func growthSummary(_ g: GrowthRecord) -> String {
+        var parts: [String] = []
+        if let w = g.weightGrams { parts.append("\(w) g") }
+        if let h = g.heightCm { parts.append(String(format: "%.1f cm", h)) }
+        if let head = g.headCircumferenceCm { parts.append(String(format: "baş %.1f cm", head)) }
+        let date = DateFormatters.displayDate.string(from: g.recordedAt)
+        return parts.isEmpty ? date : "\(parts.joined(separator: " · ")) — \(date)"
     }
 
     // MARK: - Last activities

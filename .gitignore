@@ -8,5 +8,8 @@ DerivedData/
 # Local config (secrets)
 Config.local.xcconfig
 
+# Claude Code local settings
+.claude/settings.local.json
+
 # SwiftPM
 .swiftpm/
