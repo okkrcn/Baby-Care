@@ -1,4 +1,5 @@
 import SwiftUI
+import Charts
 
 /// PDF olarak render edilen rapor içeriği — bebeğin tüm tutulan verilerini kapsar.
 /// Ekranda gösterilmek için tasarlanmamıştır; yalnızca PDFReportGenerator kullanır.
@@ -20,6 +21,7 @@ struct PDFReportView: View {
             header
             babySection
             trackingSummarySection
+            chartsSection
             if !growth.isEmpty { growthSection }
             if !vaccinations.isEmpty { vaccinationSection }
             if !medications.isEmpty { medicationSection }
@@ -143,6 +145,114 @@ struct PDFReportView: View {
                 }
             }
             Divider()
+        }
+    }
+
+    // MARK: - Charts
+
+    private struct ChartDay: Identifiable {
+        let id = UUID()
+        let label: String
+        let feeds: Int
+        let diapers: Int
+        let sleepH: Double
+    }
+
+    private struct MeasurePoint: Identifiable {
+        let id = UUID()
+        let date: Date
+        let value: Double
+    }
+
+    private static let weekdayFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "tr_TR")
+        f.dateFormat = "EEE"
+        return f
+    }()
+
+    private var last7: [ChartDay] {
+        let today = cal.startOfDay(for: .now)
+        let days = (0..<7).compactMap { cal.date(byAdding: .day, value: -6 + $0, to: today) }
+        return days.map { day in
+            ChartDay(
+                label: Self.weekdayFormatter.string(from: day),
+                feeds: feedings.filter { cal.isDate($0.startedAt, inSameDayAs: day) }.count,
+                diapers: diapers.filter { cal.isDate($0.recordedAt, inSameDayAs: day) }.count,
+                sleepH: Double(sleeps.filter { cal.isDate($0.startedAt, inSameDayAs: day) }.reduce(0) { $0 + $1.durationSeconds }) / 3600.0
+            )
+        }
+    }
+
+    private var weightPoints: [MeasurePoint] {
+        growth.compactMap { g in g.weightGrams.map { MeasurePoint(date: g.recordedAt, value: Double($0) / 1000.0) } }
+    }
+
+    private var heightPoints: [MeasurePoint] {
+        growth.compactMap { g in g.heightCm.map { MeasurePoint(date: g.recordedAt, value: $0) } }
+    }
+
+    @ViewBuilder
+    private var chartsSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Grafikler").font(.headline)
+
+            chartBlock(title: "Beslenme — son 7 gün (öğün)") {
+                Chart(last7) { d in
+                    BarMark(x: .value("Gün", d.label), y: .value("öğün", d.feeds))
+                        .foregroundStyle(Color.blue.gradient)
+                        .cornerRadius(4)
+                }
+            }
+
+            chartBlock(title: "Bez — son 7 gün (adet)") {
+                Chart(last7) { d in
+                    BarMark(x: .value("Gün", d.label), y: .value("adet", d.diapers))
+                        .foregroundStyle(Color.green.gradient)
+                        .cornerRadius(4)
+                }
+            }
+
+            chartBlock(title: "Uyku — son 7 gün (saat)") {
+                Chart(last7) { d in
+                    BarMark(x: .value("Gün", d.label), y: .value("saat", d.sleepH))
+                        .foregroundStyle(Color.indigo.gradient)
+                        .cornerRadius(4)
+                }
+            }
+
+            if !weightPoints.isEmpty {
+                chartBlock(title: "Kilo (kg)") {
+                    Chart(weightPoints) { p in
+                        LineMark(x: .value("Tarih", p.date), y: .value("kg", p.value))
+                            .foregroundStyle(.pink)
+                            .interpolationMethod(.catmullRom)
+                        PointMark(x: .value("Tarih", p.date), y: .value("kg", p.value))
+                            .foregroundStyle(.pink)
+                    }
+                }
+            }
+
+            if !heightPoints.isEmpty {
+                chartBlock(title: "Boy (cm)") {
+                    Chart(heightPoints) { p in
+                        LineMark(x: .value("Tarih", p.date), y: .value("cm", p.value))
+                            .foregroundStyle(.orange)
+                            .interpolationMethod(.catmullRom)
+                        PointMark(x: .value("Tarih", p.date), y: .value("cm", p.value))
+                            .foregroundStyle(.orange)
+                    }
+                }
+            }
+            Divider()
+        }
+    }
+
+    private func chartBlock<C: View>(title: String, @ViewBuilder chart: () -> C) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(title).font(.caption.bold())
+            chart()
+                .frame(height: 150)
         }
     }
 
