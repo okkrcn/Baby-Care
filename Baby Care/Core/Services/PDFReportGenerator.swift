@@ -47,14 +47,13 @@ enum PDFReportGenerator {
         for pageIndex in 0..<pageCount {
             pdf.beginPDFPage(nil)
             pdf.saveGState()
+            pdf.clip(to: CGRect(origin: .zero, size: pageSize))
 
-            // Üst-sol orijinli (y aşağı) koordinata geç ki CGImage doğru yönde çizilsin.
-            pdf.translateBy(x: 0, y: pageSize.height)
-            pdf.scaleBy(x: 1, y: -1)
-
-            // Bu sayfanın dilimini göstermek için görüntüyü yukarı kaydır.
-            let yOffset = -CGFloat(pageIndex) * pageSize.height
-            pdf.draw(cgImage, in: CGRect(x: 0, y: yOffset, width: pageSize.width, height: drawHeight))
+            // PDF context'i y-yukarı (origin alt-sol); bu context'te draw(cgImage:in:)
+            // görüntüyü doğru yönde çizer — manuel flip YOK.
+            // İçeriğin üstü ilk sayfada üstte olacak şekilde dilime hizala.
+            let y0 = pageSize.height - drawHeight + CGFloat(pageIndex) * pageSize.height
+            pdf.draw(cgImage, in: CGRect(x: 0, y: y0, width: pageSize.width, height: drawHeight))
 
             pdf.restoreGState()
             pdf.endPDFPage()
