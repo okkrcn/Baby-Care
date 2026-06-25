@@ -78,7 +78,7 @@ struct GuideView: View {
             }
 
             Section {
-                Text("İçerik DSÖ, T.C. Sağlık Bakanlığı ve AAP gelişim rehberlerine dayanır. Bilgilendirme amaçlıdır; her bebek farklı hızda gelişir. Endişe duyduğunuzda mutlaka pediatristinize danışın.")
+                Text("İçerik [DSÖ](https://www.who.int/tools/child-growth-standards), [T.C. Sağlık Bakanlığı](https://hsgm.saglik.gov.tr/tr/asi-takvimi.html) ve [AAP](https://www.healthychildren.org) gelişim rehberlerine dayanır. Bilgilendirme amaçlıdır; her bebek farklı hızda gelişir. Endişe duyduğunuzda mutlaka pediatristinize danışın.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

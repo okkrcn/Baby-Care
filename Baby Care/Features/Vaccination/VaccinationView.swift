@@ -78,7 +78,7 @@ struct VaccinationView: View {
                         }
 
                         Section {
-                            Text("Bu içerik T.C. Sağlık Bakanlığı Genişletilmiş Bağışıklama Programı 2026 verilerine dayanır. Bilgilendirme amaçlıdır; bebeğinizin özel takvimi için pediatristinize veya Aile Sağlığı Merkezi'ne danışın.")
+                            Text("Bu içerik [T.C. Sağlık Bakanlığı Genişletilmiş Bağışıklama Programı](https://hsgm.saglik.gov.tr/tr/asi-takvimi.html) 2026 verilerine dayanır. Bilgilendirme amaçlıdır; bebeğinizin özel takvimi için pediatristinize veya Aile Sağlığı Merkezi'ne danışın.")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }

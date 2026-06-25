@@ -30,6 +30,22 @@ struct SettingsView: View {
                 }
 
                 Section {
+                    Link(destination: URL(string: "https://hsgm.saglik.gov.tr/tr/asi-takvimi.html")!) {
+                        Label("T.C. Sağlık Bakanlığı — Aşı Takvimi", systemImage: "syringe")
+                    }
+                    Link(destination: URL(string: "https://www.who.int/tools/child-growth-standards")!) {
+                        Label("DSÖ — Çocuk Büyüme Standartları", systemImage: "chart.xyaxis.line")
+                    }
+                    Link(destination: URL(string: "https://www.healthychildren.org")!) {
+                        Label("AAP — Gelişim Rehberi (HealthyChildren.org)", systemImage: "book")
+                    }
+                } header: {
+                    Text("Kaynaklar & Referanslar")
+                } footer: {
+                    Text("Uygulamadaki aşı takvimi, büyüme grafikleri ve gelişim bilgileri bu resmi kaynaklara dayanır. Tüm içerik bilgilendirme amaçlıdır; hekim önerisinin yerini tutmaz.")
+                }
+
+                Section {
                     @Bindable var night = nightModeStore
                     Picker(selection: $night.mode) {
                         ForEach(NightModeStore.Mode.allCases, id: \.self) { mode in

@@ -67,7 +67,7 @@ struct GrowthView: View {
             }
 
             Section {
-                Text("Persentil bantları DSÖ Çocuk Büyüme Standartları'na dayanır. Bilgilendirme amaçlıdır, hekim değerlendirmesinin yerini tutmaz.")
+                Text("Persentil bantları [DSÖ Çocuk Büyüme Standartları](https://www.who.int/tools/child-growth-standards)'na dayanır. Bilgilendirme amaçlıdır, hekim değerlendirmesinin yerini tutmaz.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

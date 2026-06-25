@@ -60,7 +60,7 @@ struct VaccinationDetailView: View {
                 }
 
                 Section {
-                    Text("Bilgilendirme amaçlıdır. Aşılar Aile Sağlığı Merkezi veya hastanelerde ücretsiz yapılır.")
+                    Text("Bilgilendirme amaçlıdır. Aşılar Aile Sağlığı Merkezi veya hastanelerde ücretsiz yapılır. Kaynak: [T.C. Sağlık Bakanlığı](https://hsgm.saglik.gov.tr/tr/asi-takvimi.html).")
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                 }
