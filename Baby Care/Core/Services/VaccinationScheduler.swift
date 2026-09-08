@@ -15,7 +15,7 @@ enum VaccinationScheduler {
 
         let calendar = Calendar.current
 
-        for vaccine in VaccineCatalog.firstSixMonths {
+        for vaccine in VaccineCatalog.scheduled {
             if existingIDs.contains(vaccine.id) { continue }
 
             var components = DateComponents()
