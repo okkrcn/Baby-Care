@@ -7,8 +7,6 @@ struct FoodLibraryView: View {
     let baby: Baby
     var selection: Binding<Set<String>>?
 
-    @Environment(\.dismiss) private var dismiss
-
     @State private var query = ""
     @State private var group: FoodGroup?
     @State private var onlyAgeAppropriate = true
@@ -58,13 +56,6 @@ struct FoodLibraryView: View {
         .searchable(text: $query, prompt: "Besin ara")
         .navigationTitle(isSelecting ? "Besin Seç" : "Besinler")
         .inlineNavigationTitle()
-        .toolbar {
-            if isSelecting {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Tamam") { dismiss() }
-                }
-            }
-        }
     }
 
     private var emptyDescription: String {
