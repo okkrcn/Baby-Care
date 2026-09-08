@@ -95,6 +95,26 @@ struct FeedingCalculatorView: View {
                 Text("Anne sütü ve standart mama ≈ 67 kcal / 100 ml")
                     .font(.caption)
                     .foregroundStyle(.secondary)
+
+                if let kcal = result.solidFoodKcal {
+                    HStack {
+                        Image(systemName: "carrot.fill")
+                            .foregroundStyle(.orange)
+                        Text("Ek gıdadan ≈ \(kcal) kcal/gün")
+                            .font(.subheadline.weight(.medium))
+                        Spacer()
+                    }
+                    Text("Yukarıdaki süt hedefine ek olarak beklenen enerji.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+
+            Section {
+                Text(result.milkNote)
+                    .font(.subheadline)
+            } header: {
+                Text(result.stage.localizedTitle)
             }
 
             Section("Yaşa Göre Tipik Öğün Sayısı") {

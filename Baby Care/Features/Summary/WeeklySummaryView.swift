@@ -9,6 +9,7 @@ struct WeeklySummaryView: View {
     @Query(sort: \DiaperRecord.recordedAt, order: .reverse) private var allDiapers: [DiaperRecord]
     @Query(sort: \GrowthRecord.recordedAt) private var allGrowth: [GrowthRecord]
     @Query(sort: \VaccinationRecord.scheduledDate) private var allVaccinations: [VaccinationRecord]
+    @Query(sort: \SolidFoodRecord.servedAt, order: .reverse) private var allSolids: [SolidFoodRecord]
 
     private var summary: WeeklySummary {
         WeeklySummaryCalculator.calculate(
@@ -17,7 +18,8 @@ struct WeeklySummaryView: View {
             sleeps: allSleeps,
             diapers: allDiapers,
             growth: allGrowth,
-            vaccinations: allVaccinations
+            vaccinations: allVaccinations,
+            solidFoods: allSolids
         )
     }
 
@@ -34,6 +36,13 @@ struct WeeklySummaryView: View {
                     }
                     if summary.totalBottleML > 0 {
                         statRow("Biberon toplam", "\(summary.totalBottleML) ml")
+                    }
+                }
+
+                if baby.stage.isSolidFoodAge {
+                    statSection(title: "Ek Gıda", color: .brown, icon: "carrot.fill") {
+                        statRow("Toplam öğün", "\(summary.solidFoodMeals)")
+                        statRow("Yeni denenen besin", "\(summary.newFoodsTried)")
                     }
                 }
 

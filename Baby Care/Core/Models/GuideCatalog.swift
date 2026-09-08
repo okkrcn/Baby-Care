@@ -1,10 +1,11 @@
 import Foundation
 
-/// Bebeğin yaşına göre gelişim rehberi. Aylık bantlar halinde içerik.
+/// Bebeğin yaşına göre gelişim rehberi. Aylık bantlar halinde içerik — 0-24 ay.
 ///
 /// İçerik kaynakları: WHO Çocuk Büyüme Standartları, T.C. Sağlık Bakanlığı
-/// pediatrik gelişim materyalleri, AAP (American Academy of Pediatrics) 0-6 ay
-/// gelişim rehberleri. Bilgilendirme amaçlıdır; klinik karar için pediatristinize
+/// pediatrik gelişim materyalleri, AAP (American Academy of Pediatrics) gelişim
+/// rehberleri, CDC 'Learn the Signs. Act Early' 2022 mihenk taşları, TÜBER 2022
+/// tamamlayıcı beslenme önerileri ve AASM uyku süresi önerileri. Bilgilendirme amaçlıdır; klinik karar için pediatristinize
 /// danışın.
 struct GuideStage: Identifiable, Hashable, Sendable {
     let id: String
@@ -247,22 +248,236 @@ enum GuideCatalog {
         ),
 
         GuideStage(
-            id: "stage_26_plus",
-            minWeeks: 26, maxWeeks: Int.max,
-            title: "26+ hafta (6 ay sonrası)",
-            summary: "Uygulamanın hedef kapsamı dışında; doktor takibi devam etmeli.",
-            grossMotor: ["Bu uygulamanın 0–6 ay odağı dışında. Pediatristinize başvurun."],
-            fineMotor: [],
-            language: [],
-            socialEmotional: [],
-            feedingTips: [
-                "Ek gıdaya tam geçiş süreci başlar.",
-                "Anne sütü 2 yaşına kadar destekleyici olabilir (DSÖ)."
+            id: "stage_6_8m",
+            minWeeks: 26, maxWeeks: 35,
+            title: "6–8 ay (Ek gıdaya geçiş)",
+            summary: "Tamamlayıcı beslenme başlar. Anne sütü ana besin olmayı sürdürür.",
+            grossMotor: [
+                "Desteksiz oturur, oturma pozisyonuna kendi geçebilir.",
+                "Emeklemeye başlar.",
+                "Tutunarak ayağa kalkmayı deneyebilir."
             ],
-            sleepTips: [],
+            fineMotor: [
+                "Oyuncağı bir elinden diğerine geçirir.",
+                "Yiyeceği parmaklarıyla kendine doğru tırmıklar.",
+                "İki nesneyi birbirine vurur."
+            ],
+            language: [
+                "Tekrarlı heceler artar ('ba-ba-ba', 'ma-ma-ma').",
+                "Adı söylendiğinde bakar.",
+                "'Hayır' dendiğinde kısa süre duraklar."
+            ],
+            socialEmotional: [
+                "Yabancı kaygısı başlayabilir; tanıdıklara yapışır.",
+                "Farklı yüz ifadeleri gösterir: mutlu, üzgün, kızgın.",
+                "'Ce-ee' oyunlarında güler."
+            ],
+            feedingTips: [
+                "Ek gıda 6. ay dolunca (180. gün) başlar; 2–3 ana öğün, iştaha göre 1–2 ara öğün.",
+                "2–3 tatlı kaşığıyla başlanır, kademeli olarak öğün başına yaklaşık 125 ml'ye çıkılır.",
+                "Demir açısından zengin besinler önceliklidir: kırmızı et, tavuk, balık, yumurta.",
+                "Bitkisel demirin emilimi için C vitamini içeren sebze veya meyveyle birlikte verin.",
+                "Alerjen besinler geciktirilmez; yumurta ve yer fıstığı bu dönemde tanıtılabilir.",
+                "Bal 1 yaşından önce verilmez — infantil botulizm riski taşır.",
+                "Yemeğe tuz ve şeker eklenmez.",
+                "8. ay dolaylarında yumuşak parmak besinlere geçilebilir."
+            ],
+            sleepTips: [
+                "Toplam 12–16 saat; genellikle 2 gündüz uykusu.",
+                "Gece uyanmaları diş çıkarma veya ayrılık kaygısıyla artabilir."
+            ],
             warningSigns: [
-                "Gelişim mihenk taşlarında belirgin gecikme",
-                "Edinilmiş becerilerin kaybı"
+                "Destekle bile oturamama",
+                "Bacaklarına ağırlık verememe",
+                "Babıldamama, 'mama/baba' benzeri sesler çıkarmama",
+                "Adı söylendiğinde bakmama",
+                "Katı gıdayı ağzında tutamama veya sürekli püskürtme",
+                "Kilo alımının durması"
+            ]
+        ),
+
+        GuideStage(
+            id: "stage_9_11m",
+            minWeeks: 35, maxWeeks: 52,
+            title: "9–11 ay",
+            summary: "Hareket alanı genişler; kendi kendine beslenme becerileri gelişir.",
+            grossMotor: [
+                "Tutunarak ayağa kalkar ve mobilyalara tutunarak yürür.",
+                "Oturma ve ayağa kalkma arasında geçiş yapar.",
+                "Bazı bebekler birkaç bağımsız adım atmaya başlar."
+            ],
+            fineMotor: [
+                "Başparmak ve işaret parmağıyla küçük yiyecekleri alır (çimdik kavraması).",
+                "Nesneyi kabın içine koyar.",
+                "Parmaklarıyla kendini beslemeye başlar."
+            ],
+            language: [
+                "'Mama', 'dada' gibi ilk anlamlı kelimeler görülebilir.",
+                "'Bay bay' yapar.",
+                "Basit yönergeleri ve 'hayır'ı anlamaya başlar."
+            ],
+            socialEmotional: [
+                "Ayrılık kaygısı belirginleşir.",
+                "İlgi çekmek veya yardım istemek için yetişkine bakar.",
+                "Alkış ve 'ce-ee' gibi sosyal oyunlar oynar."
+            ],
+            feedingTips: [
+                "3–4 ana öğün ve iştaha göre 1–2 ara öğün; öğün başına yaklaşık 125 ml.",
+                "Ek gıdadan beklenen enerji günde yaklaşık 300 kcal.",
+                "Kıvam ince doğranmış ve elle kavranabilir hâle gelir — her şeyi blenderdan geçirmeyin.",
+                "7–8. aylardan itibaren ezilmiş mercimek, nohut ve fasulye eklenebilir.",
+                "Yemeğe tuz ve şeker eklenmez; inek sütü ana içecek olarak verilmez.",
+                "Çocuk yerken oturmalı ve daima gözetim altında olmalıdır."
+            ],
+            sleepTips: [
+                "Toplam 12–16 saat; iki gündüz uykusundan tek uykuya geçiş başlayabilir.",
+                "Yeni kazanılan hareket becerileri geceleri uyanmaya yol açabilir."
+            ],
+            warningSigns: [
+                "Tutunarak ayağa kalkamama",
+                "Hiçbir jest kullanmama (el sallamama, işaret etmeme)",
+                "Anlamlı hiçbir kelime denememe",
+                "Saklanan nesneyi aramama",
+                "Kazanılmış bir becerinin kaybı"
+            ]
+        ),
+
+        GuideStage(
+            id: "stage_12_15m",
+            minWeeks: 52, maxWeeks: 65,
+            title: "12–15 ay",
+            summary: "Yürüme başlar. Beslenme aile sofrasına yaklaşır, inek sütü artık verilebilir.",
+            grossMotor: [
+                "Kendi başına birkaç adım atar; yürüyüş henüz dengesiz olabilir.",
+                "Ayağa kalkıp tekrar oturabilir.",
+                "Yürürken oyuncak taşıyabilir."
+            ],
+            fineMotor: [
+                "Parmaklarıyla kendini besler, kaşığı denemeye başlar.",
+                "Birkaç nesneyi üst üste koymayı dener.",
+                "Kalemle karalama yapmayı deneyebilir."
+            ],
+            language: [
+                "'Mama' ve 'dada' dışında bir–iki kelime söylemeyi dener.",
+                "İstek veya yardım için işaret eder.",
+                "Basit sözlü yönergeleri anlamaya başlar."
+            ],
+            socialEmotional: [
+                "Başkalarının yaptığı hareketleri taklit eder.",
+                "Sevdiği nesneleri gösterir.",
+                "Tanıdık kişilere belirgin yakınlık gösterir."
+            ],
+            feedingTips: [
+                "Çocuk aile yemeklerini yiyebilir; gerektiğinde ince doğranır veya ezilir.",
+                "3–4 ana öğün ve 1–2 ara öğün; öğün başına yaklaşık 180 ml.",
+                "Ek gıdadan beklenen enerji günde yaklaşık 550 kcal.",
+                "İnek sütü artık ana içecek olarak verilebilir; tam yağlı tercih edilir.",
+                "Bal artık verilebilir.",
+                "İlave şekerli yiyecek ve içeceklerden 2 yaşına kadar kaçınılır.",
+                "Anne sütü 2 yaşına kadar sürdürülebilir.",
+                "Bütün üzüm, fındık ve sert şeker boğulma riski taşır — 3 yaşına kadar güvenli biçimde hazırlanır."
+            ],
+            sleepTips: [
+                "Toplam 11–14 saat; genellikle tek öğleden sonra uykusu.",
+                "Uyku düzeni yürümenin başlamasıyla geçici olarak bozulabilir."
+            ],
+            warningSigns: [
+                "Birkaç adım bile atamama",
+                "İstek veya yardım için işaret etmeme",
+                "'Mama/dada' dışında hiç kelime denememe",
+                "Nesneleri amacına uygun kullanmayı denememe",
+                "Başkalarının hareketlerini taklit etmeme"
+            ]
+        ),
+
+        GuideStage(
+            id: "stage_15_18m",
+            minWeeks: 65, maxWeeks: 78,
+            title: "15–18 ay",
+            summary: "Bağımsızlık artar; kelime dağarcığı genişler, seçici yeme başlayabilir.",
+            grossMotor: [
+                "Desteksiz yürür, koşmayı denemeye başlar.",
+                "Alçak bir kanepeye çıkıp inebilir.",
+                "Topa tekme atmayı deneyebilir."
+            ],
+            fineMotor: [
+                "Karalama yapar.",
+                "Bardaktan içer, kaşık kullanmayı dener.",
+                "Giysilerinin bir bölümünü çıkarmaya yardım eder."
+            ],
+            language: [
+                "'Mama' ve 'dada' dışında en az üç kelime söylemeye çalışır.",
+                "İşaret ederek ilgi çekici bir şeyi gösterir.",
+                "Jest olmadan tek aşamalı yönergeleri takip edebilir."
+            ],
+            socialEmotional: [
+                "Ev işlerini taklit eder — süpürür gibi yapar.",
+                "Bebeğini besliyormuş gibi basit sembolik oyun oynar.",
+                "Yetişkinin yüzüne bakarak tepkisini kontrol eder."
+            ],
+            feedingTips: [
+                "Seçici yeme bu dönemde normaldir; aynı besini birkaç kez sunmak gerekebilir.",
+                "Çocuk ne kadar yiyeceğine kendi karar verir; ne sunulacağına ebeveyn karar verir.",
+                "Öğünler aileyle birlikte, ekransız ve oturarak yenir.",
+                "İlave şeker ve tuzdan kaçınmayı sürdürün.",
+                "Meyve suyu yerine meyvenin kendisi tercih edilir; verilecekse günde en fazla 120 ml."
+            ],
+            sleepTips: [
+                "Toplam 11–14 saat; genellikle tek öğleden sonra uykusu.",
+                "Tutarlı bir yatma rutini geçişleri kolaylaştırır."
+            ],
+            warningSigns: [
+                "Desteksiz yürüyememe",
+                "Üç kelimeden az söz dağarcığı veya yeni kelime kazanamama",
+                "Hiç işaret etmeme",
+                "Kaşık kullanmayı denememe, bardaktan içememe",
+                "Kazanılmış becerilerin kaybı"
+            ]
+        ),
+
+        GuideStage(
+            id: "stage_18_24m",
+            minWeeks: 78, maxWeeks: Int.max,
+            title: "18–24 ay",
+            summary: "İki kelimelik ifadeler başlar; çocuk aile sofrasının bir parçasıdır.",
+            grossMotor: [
+                "Koşar, topa tekme atar.",
+                "Birkaç basamağı yardımla veya yardımsız çıkabilir.",
+                "Mobilyalara tırmanıp iner."
+            ],
+            fineMotor: [
+                "Kaşıkla yemeye çalışır.",
+                "Kitap sayfalarını tek tek çevirmeye çalışır.",
+                "Kapak ve düğme gibi mekanizmaları kullanmayı dener."
+            ],
+            language: [
+                "En az iki kelimeyi birlikte söyler ('daha su', 'anne gel').",
+                "Vücut bölümlerini gösterebilir.",
+                "Basit yönergeleri takip eder."
+            ],
+            socialEmotional: [
+                "Yeni durumlarda ebeveyninden güvence arar.",
+                "Başkalarının üzgün olduğunu fark eder.",
+                "Basit hayali oyunlar oynar."
+            ],
+            feedingTips: [
+                "3–4 ana öğün ve 1–2 ara öğün; çocuk aile yemeklerini yer.",
+                "İlave şekerli yiyecek ve içeceklerden 2 yaşına kadar kaçınılır.",
+                "Anne sütü 2 yaşına kadar, istenirse sonrasında da sürdürülebilir.",
+                "Kendi kendine yeme denemeleri dağınık olur — bu öğrenmenin parçasıdır.",
+                "Bütün fındık ve sert besinler boğulma riski nedeniyle 3 yaşına kadar ezilerek verilir."
+            ],
+            sleepTips: [
+                "Toplam 11–14 saat; genellikle tek öğleden sonra uykusu.",
+                "Bazı çocuklar bu dönemde gündüz uykusunu bırakmaya başlayabilir."
+            ],
+            warningSigns: [
+                "Koşamama veya yürüyememe",
+                "İki kelimeyi birlikte kullanmama",
+                "Jest, işaret veya anlamlı iletişim kullanmama",
+                "Başkalarının duygularını fark etmeme",
+                "Kitap, oyuncak veya insanlarla etkileşime belirgin ilgisizlik",
+                "Daha önce kazanılmış herhangi bir becerinin kaybı"
             ]
         )
     ]

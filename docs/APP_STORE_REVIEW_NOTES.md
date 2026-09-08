@@ -44,3 +44,29 @@ This app is a fully offline baby-care tracker for parents of 0–6 month-old bab
 ## Support URL
 
 - E-posta tabanlı destek sayfası ya da basit bir GitHub Pages yeterli.
+
+## Sürüm 1.5 — Ek Gıda Modülü (kapsam genişlemesi)
+
+Uygulamanın yaş kapsamı 0–6 aydan 0–24 aya genişletildi ve tamamlayıcı
+beslenme (ek gıda) takibi eklendi.
+
+**Tıbbi içerik sınırı — değişmedi:** Uygulama tanı koymaz, ilaç veya doz
+önermez, alerji protokolü yürütmez. Yeni eklenen her ekranda (a) tıklanabilir
+resmi kaynak linki ve (b) "Bu içerik bilgilendirme amaçlıdır; hekim önerisinin
+yerini tutmaz" ibaresi bulunur.
+
+**Yeni içeriğin kaynakları:**
+- Tamamlayıcı beslenme önerileri: T.C. Sağlık Bakanlığı Türkiye Beslenme
+  Rehberi (TÜBER 2022) ve DSÖ 2023 tamamlayıcı beslenme kılavuzu
+- Alerjen tanıtımı: ESPGHAN, AAP 2023 klinik raporu, EAACI 2021, NIAID
+- Aşı takvimi: Ulusal Çocukluk Dönemi Aşılama Takvimi (2025)
+- Büyüme eğrileri: WHO Child Growth Standards, ay bazlı persentil tabloları
+- Gelişim mihenk taşları: CDC "Learn the Signs. Act Early." (2022 revizyonu)
+- Boğulma ve anafilaksi: AAP Allergy and Anaphylaxis Emergency Plan
+
+**Yaş bariyerleri engelleyici değildir:** Bal, tuz, ilave şeker gibi besinler
+için yaş uyarısı gösterilir, ancak kullanıcının kayıt tutması engellenmez.
+Uygulama bir takip aracıdır; beslenme kararı ebeveyn ve hekimindir.
+
+**Acil durum yönlendirmesi:** Anafilaksi ve boğulma ekranları kullanıcıyı
+112'ye yönlendirir. Uygulama içinden arama başlatılmaz; yalnızca bilgi verilir.

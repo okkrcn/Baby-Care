@@ -11,6 +11,8 @@ struct BabyProfileView: View {
     @Query(sort: \SleepRecord.startedAt, order: .reverse) private var allSleeps: [SleepRecord]
     @Query(sort: \DiaperRecord.recordedAt, order: .reverse) private var allDiapers: [DiaperRecord]
     @Query(sort: \BreastMilkBatch.pumpedAt, order: .reverse) private var allMilk: [BreastMilkBatch]
+    @Query(sort: \SolidFoodRecord.servedAt, order: .reverse) private var allSolids: [SolidFoodRecord]
+    @Query private var allAllergens: [AllergenIntroduction]
 
     @Environment(\.modelContext) private var modelContext
 
@@ -45,6 +47,14 @@ struct BabyProfileView: View {
                             MedicationView(baby: baby)
                         } label: {
                             Label("Vitamin & İlaç", systemImage: "pills.fill")
+                        }
+
+                        if baby.stage.isSolidFoodAge {
+                            NavigationLink {
+                                SolidFoodView(baby: baby)
+                            } label: {
+                                Label("Ek Gıda", systemImage: "carrot.fill")
+                            }
                         }
 
                         NavigationLink {
@@ -228,7 +238,14 @@ struct BabyProfileView: View {
                 growth: growth,
                 vaccinations: vaccs,
                 medications: meds,
-                milkBatches: milk
+                milkBatches: milk,
+                solidFoods: allSolids.filter { $0.babyID == baby.id },
+                allergens: allAllergens.filter { $0.babyID == baby.id }
+                    .sorted {
+                        let l = Allergen.allCases.firstIndex(of: $0.allergen) ?? 0
+                        let r = Allergen.allCases.firstIndex(of: $1.allergen) ?? 0
+                        return l < r
+                    }
             )
         }
         if let url {
