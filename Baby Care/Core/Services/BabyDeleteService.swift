@@ -14,6 +14,8 @@ enum BabyDeleteService {
         deleteAll(DiaperRecord.self,  babyID: babyID, in: context)
         deleteAll(GrowthRecord.self,  babyID: babyID, in: context)
         deleteAll(BreastMilkBatch.self, babyID: babyID, in: context)
+        deleteAll(SolidFoodRecord.self, babyID: babyID, in: context)
+        deleteAll(AllergenIntroduction.self, babyID: babyID, in: context)
 
         // Aşı kayıtlarını sil + bildirimleri iptal et
         let vaccPredicate = #Predicate<VaccinationRecord> { $0.babyID == babyID }
@@ -63,3 +65,5 @@ extension SleepRecord:     HasBabyID {}
 extension DiaperRecord:    HasBabyID {}
 extension GrowthRecord:    HasBabyID {}
 extension BreastMilkBatch: HasBabyID {}
+extension SolidFoodRecord:      HasBabyID {}
+extension AllergenIntroduction: HasBabyID {}
