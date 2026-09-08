@@ -11,6 +11,7 @@ struct DashboardView: View {
     @Query(sort: \DiaperRecord.recordedAt, order: .reverse) private var allDiapers: [DiaperRecord]
     @Query(sort: \VaccinationRecord.scheduledDate) private var allVaccinations: [VaccinationRecord]
     @Query(sort: \GrowthRecord.recordedAt, order: .reverse) private var allGrowth: [GrowthRecord]
+    @Query(sort: \SolidFoodRecord.servedAt, order: .reverse) private var allSolids: [SolidFoodRecord]
 
     @State private var quickActionFeedback: String?
     @State private var feedbackOpacity: Double = 0
@@ -44,6 +45,9 @@ struct DashboardView: View {
                     if let baby {
                         babyHeader(baby)
                         emergencyHelpCard
+                        if baby.stage.isSolidFoodAge {
+                            solidFoodCard(baby: baby)
+                        }
                         quickActionsSection(baby: baby)
                         if let next = nextVaccination {
                             nextVaccinationCard(next)
@@ -333,7 +337,8 @@ struct DashboardView: View {
                 sleeps: allSleeps,
                 diapers: allDiapers,
                 growth: [],
-                vaccinations: allVaccinations
+                vaccinations: allVaccinations,
+                solidFoods: allSolids
             )
             HStack(spacing: 12) {
                 Image(systemName: "calendar.badge.clock")
@@ -370,6 +375,43 @@ struct DashboardView: View {
     private var latestGrowth: GrowthRecord? {
         guard let id = baby?.id else { return nil }
         return allGrowth.first { $0.babyID == id }
+    }
+
+    // MARK: - Ek gıda kartı
+
+    private func solidFoodCard(baby: Baby) -> some View {
+        let todaysMeals = allSolids.filter {
+            $0.babyID == baby.id && Calendar.current.isDateInToday($0.servedAt)
+        }.count
+
+        return NavigationLink {
+            SolidFoodView(baby: baby)
+        } label: {
+            HStack(spacing: 12) {
+                Image(systemName: "carrot.fill")
+                    .font(.title2)
+                    .foregroundStyle(.brown)
+                    .frame(width: 44, height: 44)
+                    .background(.brown.opacity(0.15), in: .circle)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Ek Gıda")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.primary)
+                    Text(todaysMeals == 0
+                         ? "Rehber, besin kütüphanesi ve alerjen takibi"
+                         : "Bugün \(todaysMeals) öğün kaydedildi")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .foregroundStyle(.secondary)
+                    .font(.caption)
+            }
+            .padding()
+            .background(.brown.opacity(0.08), in: .rect(cornerRadius: 14))
+        }
+        .buttonStyle(.plain)
     }
 
     private func growthCard(baby: Baby) -> some View {
@@ -516,8 +558,14 @@ struct DashboardView: View {
             return "3. ayda günde ortalama 15 saat uyku — 10 saati gece, kalanı gündüz şekerlemeleri."
         case 18..<26:
             return "5. ay civarında bebek elini ağzına götürür, ses çıkarmaktan keyif alır."
+        case 26..<35:
+            return "Ek gıda 6. ay dolunca başlar. Demir açısından zengin besinler önceliklidir; anne sütü ana besin olmayı sürdürür."
+        case 35..<52:
+            return "9-11 ayda kıvam incelir: ezilmiş yerine ince doğranmış. Günde 3-4 ana öğün, iştaha göre 1-2 ara öğün."
+        case 52..<78:
+            return "1 yaşından sonra çocuk aile yemeklerini yiyebilir. İnek sütü artık ana içecek olabilir; ilave şeker 2 yaşına kadar önerilmez."
         default:
-            return "6. aydan itibaren ek gıdaya geçiş başlar; anne sütü hâlâ ana besin kaynağıdır."
+            return "18-24 ayda seçici yeme normaldir. Ne sunulacağına siz, ne kadar yiyeceğine çocuk karar verir."
         }
     }
 

@@ -23,6 +23,10 @@ struct WeeklySummary: Sendable {
     let heightChangeCm: Double?
 
     let completedVaccinations: Int
+
+    /// Ek gıda dönemi (6 ay+) için; küçük bebekte sıfır kalır.
+    let solidFoodMeals: Int
+    let newFoodsTried: Int
 }
 
 @MainActor
@@ -34,6 +38,7 @@ enum WeeklySummaryCalculator {
         diapers: [DiaperRecord],
         growth: [GrowthRecord],
         vaccinations: [VaccinationRecord],
+        solidFoods: [SolidFoodRecord],
         referenceDate: Date = .now
     ) -> WeeklySummary {
         let calendar = Calendar.current
@@ -70,6 +75,8 @@ enum WeeklySummaryCalculator {
             }
         }
 
+        let weekSolids = solidFoods.filter { $0.babyID == baby.id && inRange($0.servedAt) }
+
         let completedVaccs = vaccinations.filter {
             $0.babyID == baby.id && ($0.completedDate.map(inRange) ?? false)
         }.count
@@ -90,7 +97,9 @@ enum WeeklySummaryCalculator {
             averageDiapersPerDay: Double(weekDiapers.count) / 7.0,
             weightChangeGrams: weightDelta,
             heightChangeCm: heightDelta,
-            completedVaccinations: completedVaccs
+            completedVaccinations: completedVaccs,
+            solidFoodMeals: weekSolids.count,
+            newFoodsTried: weekSolids.filter(\.isFirstTry).count
         )
     }
 }

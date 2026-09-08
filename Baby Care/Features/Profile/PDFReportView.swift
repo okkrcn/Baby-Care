@@ -13,6 +13,8 @@ struct PDFReportView: View {
     let vaccinations: [VaccinationRecord]
     let medications: [Medication]
     let milkBatches: [BreastMilkBatch]  // tarihe göre azalan
+    let solidFoods: [SolidFoodRecord]   // tarihe göre azalan
+    let allergens: [AllergenIntroduction]
 
     private let cal = Calendar.current
 
@@ -26,6 +28,7 @@ struct PDFReportView: View {
             if !vaccinations.isEmpty { vaccinationSection }
             if !medications.isEmpty { medicationSection }
             if !milkBatches.isEmpty { milkSection }
+            if !solidFoods.isEmpty || !allergens.isEmpty { solidFoodSection }
             recentLogsSection
             footer
         }
@@ -341,6 +344,41 @@ struct PDFReportView: View {
                         Text(m.dosageText).font(.caption2).foregroundStyle(.gray)
                     }
                 }
+            }
+            Divider()
+        }
+    }
+
+    // MARK: - Solid food
+
+    private var solidFoodSection: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text("Ek Gıda").font(.headline)
+
+            if !solidFoods.isEmpty {
+                let distinctFoods = Set(solidFoods.flatMap(\.foodIDs)).count
+                row("Toplam öğün", "\(solidFoods.count)")
+                row("Denenen farklı besin", "\(distinctFoods)")
+                if let first = solidFoods.last {
+                    row("İlk ek gıda", dateTime(first.servedAt))
+                }
+            }
+
+            let introduced = allergens.filter { $0.status != .notIntroduced }
+            if !introduced.isEmpty {
+                Text("Alerjen durumu").font(.caption.bold()).padding(.top, 2)
+                ForEach(introduced) { intro in
+                    HStack(alignment: .top) {
+                        Text(intro.allergen.localizedTitle)
+                            .font(.caption2)
+                        Spacer()
+                        Text(intro.status.localizedTitle)
+                            .font(.caption2)
+                            .foregroundStyle(intro.status == .reacted ? .red : .gray)
+                    }
+                }
+                Text("Tepki gözlenen besin hekim değerlendirmesi olmadan evde tekrar denenmez.")
+                    .font(.caption2).foregroundStyle(.gray).padding(.top, 1)
             }
             Divider()
         }
