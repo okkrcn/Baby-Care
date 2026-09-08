@@ -75,7 +75,8 @@ enum SymptomCatalog {
         gözAkıntısı,
         hıçkırık,
         pamukçuk,
-        hapşırmaVeÖksürük
+        hapşırmaVeÖksürük,
+        alerjikReaksiyon
     ]
 
     // MARK: - Göbek Bakımı
@@ -914,6 +915,57 @@ enum SymptomCatalog {
                     "Sık bez değişimi, açık hava (mümkün olduğunca).",
                     "Pişik kremi (çinko oksit) sürün.",
                     "5 günde geçmezse veya kabarcık çıkarsa doktora gösterin."
+                  ])
+        ]
+    )
+
+    // MARK: - Alerjik Reaksiyon
+
+    static let alerjikReaksiyon = SymptomCategory(
+        id: "allergic_reaction",
+        title: "Alerjik Reaksiyon",
+        icon: "allergens.fill",
+        color: .pink,
+        prompt: "Yeni bir besinden sonra ortaya çıkan belirtiler. Reaksiyonların çoğu ilk iki saat içinde başlar. Kaynak: AAP Allergy and Anaphylaxis Emergency Plan.",
+        scenarios: [
+            .init(id: "allergy_mild",
+                  label: "Ağız çevresinde birkaç kabarıklık veya kızarıklık",
+                  urgency: .warning,
+                  advice: "Besini durdurun ve bebeği yakından izleyin. Belirti yayılırsa veya solunum, kusma gibi ikinci bir sistem eklenirse anafilaksi gibi davranın.",
+                  nextSteps: [
+                    "Verdiğiniz besini ve saati not edin.",
+                    "Aynı besini hekiminize danışmadan tekrar vermeyin.",
+                    "Bebeği en az iki saat gözlemleyin.",
+                    "Doktorunuz önermeden ilaç vermeyin."
+                  ]),
+            .init(id: "allergy_widespread_hives",
+                  label: "Vücuda yayılan kurdeşen (ürtiker)",
+                  urgency: .warning,
+                  advice: "Tek başına yaygın döküntü acil olmayabilir, ancak hızla ilerleyebilir. Bugün hekime başvurun.",
+                  nextSteps: [
+                    "Solunumu ve yutmayı sürekli kontrol edin.",
+                    "Döküntünün fotoğrafını çekin — hekim için değerlidir.",
+                    "Nefes darlığı, hırıltı veya şişme eklenirse hemen 112'yi arayın."
+                  ]),
+            .init(id: "allergy_vomiting",
+                  label: "Yeni besinden sonra tekrarlayan kusma veya ağır ishal",
+                  urgency: .warning,
+                  advice: "Sindirim sistemi bulguları tek başına da alerjik reaksiyon olabilir. Hekime başvurun.",
+                  nextSteps: [
+                    "Sıvı kaybı belirtilerini izleyin: az ıslak bez, ağız kuruluğu, halsizlik.",
+                    "Besini durdurun; hekiminize danışmadan tekrar vermeyin.",
+                    "Halsizlik veya solukluk eklenirse hemen 112'yi arayın."
+                  ]),
+            .init(id: "allergy_anaphylaxis",
+                  label: "Nefes darlığı, hırıltı, dudak-dil şişmesi veya ani halsizlik",
+                  urgency: .emergency,
+                  advice: "Bu anafilaksi olabilir. HEMEN 112'yi arayın. Reçeteli adrenalin oto-enjektörünüz varsa beklemeden uygulayın — antihistaminik adrenalinin yerine geçmez.",
+                  nextSteps: [
+                    "112'yi arayın; beklemeyin.",
+                    "Reçeteli adrenalini uyluğun ön-yan yüzüne uygulayın.",
+                    "Bebeği sırtüstü yatırın; kusuyorsa yan çevirin. Ayağa kaldırmayın.",
+                    "Belirtiler 5 dakikada düzelmezse ikinci doz için 112 ekibiyle konuşun.",
+                    "Düzelmiş görünse bile acil serviste değerlendirilmelidir."
                   ])
         ]
     )

@@ -26,7 +26,7 @@ struct FirstAidScenario: Identifiable, Hashable, Sendable {
 
 enum FirstAidCatalog {
     static let scenarios: [FirstAidScenario] = [
-        choking, cpr, fever, fall, burn, drowning, noseBlock, allergy
+        choking, chokingToddler, cpr, fever, fall, burn, drowning, noseBlock, allergy
     ]
 
     // MARK: - Boğulma (yabancı cisim)
@@ -36,31 +36,70 @@ enum FirstAidCatalog {
         title: "Bebek Boğulması",
         icon: "lungs.fill",
         color: .red,
-        summary: "Bebek bir cisim ile boğuluyor (nefes alamıyor, ağlamıyor, mavi/mor renk).",
+        summary: "Bebek bir cisim ile boğuluyor (nefes alamıyor, ağlamıyor, mavi/mor renk). Öğürme ile karıştırmayın.",
         callEmergency: true,
         callEmergencyWhen: [
             "Bebek bilincini kaybederse hemen 112'yi arayın.",
             "İlk müdahale işe yaramazsa veya bebek nefes almazsa 112."
         ],
         steps: [
-            .init(id: 1, title: "112'yi arayın", detail: "Mümkünse hoparlöre alın; iki elinizi serbest tutun."),
-            .init(id: 2, title: "Bebeği yüzükoyun çevirin",
+            .init(id: 1, title: "Önce öğürme mü, boğulma mı ayırt edin",
+                  detail: "Öğürmede bebek ses çıkarır, öksürür ve yüzü kızarır — bu koruyucu bir reflekstir, ek gıda döneminde sık görülür. Bekleyin, sırta vurmayın. Boğulmada ses yoktur: öksüremez, nefes alamaz, rengi morarır. Aşağıdaki adımlar yalnız boğulma içindir."),
+            .init(id: 2, title: "112'yi arayın", detail: "Mümkünse hoparlöre alın; iki elinizi serbest tutun."),
+            .init(id: 3, title: "Bebeği yüzükoyun çevirin",
                   detail: "Kolunuza yatırın, başı vücudundan aşağıda olacak şekilde. Çene açık tutulsun."),
-            .init(id: 3, title: "Sırta 5 kez vurun",
+            .init(id: 4, title: "Sırta 5 kez vurun",
                   detail: "Avuç içiyle iki kürek kemiği arasına orta şiddetle vurun."),
-            .init(id: 4, title: "Cisim çıkmazsa ters çevirin",
+            .init(id: 5, title: "Cisim çıkmazsa ters çevirin",
                   detail: "Bebeği sırtüstü kolunuza yatırın, başı yine aşağıda."),
-            .init(id: 5, title: "Göğüs ortasına 5 bası uygulayın",
+            .init(id: 6, title: "Göğüs ortasına 5 bası uygulayın",
                   detail: "İki parmağınızla göğüs kemiğinin alt yarısına bastırın (~4 cm derin, 5 hızlı bası)."),
-            .init(id: 6, title: "Adımları tekrarlayın",
+            .init(id: 7, title: "Adımları tekrarlayın",
                   detail: "Cisim çıkana veya 112 ekibi gelene kadar 5 sırta vuruş + 5 göğüs basısını döngü halinde yapın."),
-            .init(id: 7, title: "Bilinç kaybederse CPR'a geçin",
+            .init(id: 8, title: "Bilinç kaybederse CPR'a geçin",
                   detail: "Aşağıdaki 'Bebek CPR' adımlarını uygulayın.")
         ],
         warnings: [
             "ASLA elinizle bebeğin ağzına körlemesine bir şey sokmayın.",
             "Ters Heimlich uygulamayın — bebeklerde kullanılmaz.",
-            "Bebeği baş aşağı SALLAMAYIN."
+            "Bebeği baş aşağı SALLAMAYIN.",
+            "Öğüren bebeğe sırt vuruşu veya bası UYGULAMAYIN — öksürük en etkili temizleyicidir."
+        ]
+    )
+
+    // MARK: - Boğulma (1 yaş üstü)
+
+    static let chokingToddler = FirstAidScenario(
+        id: "choking_toddler",
+        title: "Çocuk Boğulması (1 yaş üstü)",
+        icon: "lungs.fill",
+        color: .red,
+        summary: "1 yaşından büyük çocuk bir cisim ile boğuluyor. Öğürme ile karıştırmayın.",
+        callEmergency: true,
+        callEmergencyWhen: [
+            "Çocuk konuşamıyor, öksüremiyor veya nefes alamıyorsa hemen 112.",
+            "Bilinç kaybı gelişirse hemen 112.",
+            "Cisim çıksa bile solunum düzelmiyorsa 112."
+        ],
+        steps: [
+            .init(id: 1, title: "Önce öğürme mü, boğulma mı ayırt edin",
+                  detail: "Öğüren çocuk ses çıkarır ve öksürür — müdahale etmeyin, öksürmesine izin verin. Boğulmada ses yoktur, ellerini boğazına götürebilir, rengi morarır."),
+            .init(id: 2, title: "112'yi arayın",
+                  detail: "Yanınızda biri varsa o arasın; siz müdahaleye başlayın."),
+            .init(id: 3, title: "Sırta 5 kez vurun",
+                  detail: "Çocuğu öne eğdirin, avuç içiyle iki kürek kemiği arasına vurun."),
+            .init(id: 4, title: "Karın baskısı uygulayın (5 kez)",
+                  detail: "Arkasından sarılın, yumruğunuzu göbek ile göğüs kemiği arasına koyun, diğer elinizle kavrayıp içeri ve yukarı doğru bastırın. Bu manevra 1 yaş altında UYGULANMAZ, 1 yaş üstünde uygulanır."),
+            .init(id: 5, title: "Adımları tekrarlayın",
+                  detail: "Cisim çıkana veya 112 ekibi gelene kadar 5 sırta vuruş + 5 karın baskısını döngü halinde sürdürün."),
+            .init(id: 6, title: "Bilinç kaybederse CPR'a geçin",
+                  detail: "Çocuğu yere yatırın ve temel yaşam desteğine başlayın.")
+        ],
+        warnings: [
+            "Öğüren çocuğa müdahale ETMEYİN — öksürük en etkili temizleyicidir.",
+            "Ağza körlemesine parmak sokmayın; cismi daha derine itebilirsiniz.",
+            "Karın baskısı sonrası cisim çıksa bile çocuk hekime gösterilmelidir.",
+            "Bütün üzüm, kuruyemiş ve sert şeker 3 yaşına kadar bu riskin en sık nedenleridir."
         ]
     )
 
@@ -282,16 +321,19 @@ enum FirstAidCatalog {
         steps: [
             .init(id: 1, title: "112'yi arayın",
                   detail: "Anafilaksi belirtilerinde bekleme — derhal arayın."),
-            .init(id: 2, title: "Bebeği sırtüstü yatırın",
-                  detail: "Nefes alıyorsa yan yatış pozisyonu daha güvenli."),
-            .init(id: 3, title: "Şüpheli besini durdurun",
+            .init(id: 2, title: "Reçeteli adrenaliniz varsa hemen uygulayın",
+                  detail: "Çocuğunuz için daha önce adrenalin oto-enjektörü reçete edildiyse, anafilaksi belirtilerinde beklemeden uyluğun ön-yan yüzüne uygulayın. Belirtiler 5 dakikada düzelmezse ikinci doz gerekebilir — 112 ekibiyle konuşun."),
+            .init(id: 3, title: "Bebeği sırtüstü yatırın",
+                  detail: "Nefes alıyorsa yan yatış pozisyonu daha güvenli. Ayağa kaldırıp dolaştırmayın."),
+            .init(id: 4, title: "Şüpheli besini durdurun",
                   detail: "Son verdiğiniz yeni gıdayı (yumurta, süt, fıstık) not edin."),
-            .init(id: 4, title: "Soluk almaya yardım",
+            .init(id: 5, title: "Soluk almaya yardım",
                   detail: "Kollarını yana açın, dik tutun. Solunum durduysa CPR'a başlayın."),
-            .init(id: 5, title: "Bilgi toplayın",
+            .init(id: 6, title: "Bilgi toplayın",
                   detail: "Doktora söylemek için: ne yedi, ne zaman, hangi belirti ne sıra ile çıktı.")
         ],
         warnings: [
+            "Antihistaminik yalnızca deri belirtilerini azaltabilir; adrenalinin YERİNE GEÇMEZ.",
             "Doktor önermeden ev tipi antihistaminik (Avil vs.) VERMEYİN.",
             "Anafilaksi sıklıkla 30 dk içinde başlar — geçti sanmayın, mutlaka muayene.",
             "Bal vermeyin (1 yaş altı botulizm riski)."
