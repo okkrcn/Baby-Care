@@ -47,6 +47,14 @@ struct BabyProfileView: View {
                             Label("Vitamin & İlaç", systemImage: "pills.fill")
                         }
 
+                        if baby.stage.isSolidFoodAge {
+                            NavigationLink {
+                                SolidFoodView(baby: baby)
+                            } label: {
+                                Label("Ek Gıda", systemImage: "carrot.fill")
+                            }
+                        }
+
                         NavigationLink {
                             FeedingCalculatorView(baby: baby)
                         } label: {

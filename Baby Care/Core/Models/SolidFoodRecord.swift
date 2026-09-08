@@ -132,3 +132,21 @@ final class SolidFoodRecord {
         self.updatedAt = updatedAt
     }
 }
+
+/// Takip ekranındaki günlük ek gıda özet kartının verisi.
+struct SolidFoodDaySummary: Sendable {
+    let mealCount: Int
+    let firstTryCount: Int
+
+    var detailText: String {
+        if mealCount == 0 { return "—" }
+        return firstTryCount > 0 ? "\(firstTryCount) yeni besin" : "yeni besin yok"
+    }
+
+    static func make(from records: [SolidFoodRecord]) -> SolidFoodDaySummary {
+        SolidFoodDaySummary(
+            mealCount: records.count,
+            firstTryCount: records.filter(\.isFirstTry).count
+        )
+    }
+}

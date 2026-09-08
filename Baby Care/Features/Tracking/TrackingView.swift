@@ -9,6 +9,7 @@ struct TrackingView: View {
     @Query(sort: \FeedingRecord.startedAt, order: .reverse) private var allFeedings: [FeedingRecord]
     @Query(sort: \SleepRecord.startedAt, order: .reverse) private var allSleeps: [SleepRecord]
     @Query(sort: \DiaperRecord.recordedAt, order: .reverse) private var allDiapers: [DiaperRecord]
+    @Query(sort: \SolidFoodRecord.servedAt, order: .reverse) private var allSolids: [SolidFoodRecord]
 
     @State private var showFeedingSheet = false
     @State private var showSleepSheet = false
@@ -22,6 +23,8 @@ struct TrackingView: View {
     @State private var editingFeeding: FeedingRecord?
     @State private var editingSleep: SleepRecord?
     @State private var editingDiaper: DiaperRecord?
+    @State private var editingSolid: SolidFoodRecord?
+    @State private var showSolidSheet = false
 
     private var baby: Baby? { babyStore.resolved(from: babies) }
     private var babyID: UUID? { baby?.id }
@@ -64,6 +67,18 @@ struct TrackingView: View {
         return allDiapers.filter {
             $0.babyID == id && Calendar.current.isDate($0.recordedAt, inSameDayAs: selectedDate)
         }
+    }
+
+    private var todaysSolids: [SolidFoodRecord] {
+        guard let id = babyID else { return [] }
+        return allSolids.filter {
+            $0.babyID == id && Calendar.current.isDate($0.servedAt, inSameDayAs: selectedDate)
+        }
+    }
+
+    /// Ek gıda yüzeyleri yalnız 6 ayını dolduran bebekte görünür.
+    private var isSolidAge: Bool {
+        baby?.stage.isSolidFoodAge == true
     }
 
     private var totalFeedingSeconds: Int {
@@ -164,6 +179,16 @@ struct TrackingView: View {
             .sheet(item: $editingDiaper) { rec in
                 if let id = babyID {
                     DiaperAddSheet(babyID: id, editing: rec)
+                }
+            }
+            .sheet(isPresented: $showSolidSheet) {
+                if let baby {
+                    SolidFoodAddSheet(baby: baby)
+                }
+            }
+            .sheet(item: $editingSolid) { rec in
+                if let baby {
+                    SolidFoodAddSheet(baby: baby, editing: rec)
                 }
             }
         }
@@ -295,30 +320,49 @@ struct TrackingView: View {
                 .font(.headline)
                 .foregroundStyle(.secondary)
 
-            HStack(spacing: 12) {
-                summaryCard(
-                    icon: "drop.fill",
-                    color: .blue,
-                    title: "Beslenme",
-                    primary: "\(todaysFeedings.count) öğün",
-                    secondary: feedingSummaryDetail
-                )
-                summaryCard(
-                    icon: "moon.zzz.fill",
-                    color: .indigo,
-                    title: "Uyku",
-                    primary: DurationFormatter.string(fromSeconds: totalSleepSeconds),
-                    secondary: "\(todaysSleeps.count) kez"
-                )
-                summaryCard(
-                    icon: "leaf.fill",
-                    color: .green,
-                    title: "Bez",
-                    primary: "\(todaysDiapers.count)",
-                    secondary: "değişim"
-                )
+            // 6 ay altında üç kart tek satırda; ek gıda başlayınca 2x2 ızgara.
+            if isSolidAge {
+                let solid = SolidFoodDaySummary.make(from: todaysSolids)
+                Grid(horizontalSpacing: 12, verticalSpacing: 12) {
+                    GridRow {
+                        feedingSummaryCard
+                        sleepSummaryCard
+                    }
+                    GridRow {
+                        diaperSummaryCard
+                        summaryCard(
+                            icon: "carrot.fill",
+                            color: .brown,
+                            title: "Ek Gıda",
+                            primary: "\(solid.mealCount) öğün",
+                            secondary: solid.detailText
+                        )
+                    }
+                }
+            } else {
+                HStack(spacing: 12) {
+                    feedingSummaryCard
+                    sleepSummaryCard
+                    diaperSummaryCard
+                }
             }
         }
+    }
+
+    private var feedingSummaryCard: some View {
+        summaryCard(icon: "drop.fill", color: .blue, title: "Beslenme",
+                    primary: "\(todaysFeedings.count) öğün", secondary: feedingSummaryDetail)
+    }
+
+    private var sleepSummaryCard: some View {
+        summaryCard(icon: "moon.zzz.fill", color: .indigo, title: "Uyku",
+                    primary: DurationFormatter.string(fromSeconds: totalSleepSeconds),
+                    secondary: "\(todaysSleeps.count) kez")
+    }
+
+    private var diaperSummaryCard: some View {
+        summaryCard(icon: "leaf.fill", color: .green, title: "Bez",
+                    primary: "\(todaysDiapers.count)", secondary: "değişim")
     }
 
     private func summaryCard(icon: String, color: Color, title: String, primary: String, secondary: String) -> some View {
@@ -379,6 +423,16 @@ struct TrackingView: View {
                     tap: { showDiaperDialog = true },
                     long: { showDiaperSheet = true }
                 )
+                if isSolidAge {
+                    quickButton(
+                        title: "Ek Gıda",
+                        icon: "carrot.fill",
+                        color: .brown,
+                        isActive: false,
+                        tap: { showSolidSheet = true },
+                        long: { showSolidSheet = true }
+                    )
+                }
             }
         }
         .confirmationDialog("Bez Değişimi", isPresented: $showDiaperDialog, titleVisibility: .visible) {
@@ -549,6 +603,7 @@ struct TrackingView: View {
         case .feeding(let f): editingFeeding = f
         case .sleep(let s):   editingSleep = s
         case .diaper(let d):  editingDiaper = d
+        case .solid(let s):   editingSolid = s
         }
     }
 
@@ -557,6 +612,7 @@ struct TrackingView: View {
         case .feeding(let f): modelContext.delete(f)
         case .sleep(let s):   modelContext.delete(s)
         case .diaper(let d):  modelContext.delete(d)
+        case .solid(let s):   modelContext.delete(s)
         }
         try? modelContext.save()
     }
@@ -567,6 +623,7 @@ struct TrackingView: View {
         case feeding(FeedingRecord)
         case sleep(SleepRecord)
         case diaper(DiaperRecord)
+        case solid(SolidFoodRecord)
     }
 
     private struct ActivityItem {
@@ -621,6 +678,17 @@ struct TrackingView: View {
                 title: "Bez", subtitle: d.type.localizedTitle,
                 icon: d.type.icon, color: .green,
                 kind: .diaper(d)
+            ))
+        }
+
+        for s in todaysSolids {
+            var parts = [s.method.localizedTitle, s.amount.localizedTitle]
+            if s.isFirstTry { parts.append("Yeni besin") }
+            items.append(.init(
+                id: s.id, timestamp: s.servedAt,
+                title: s.displayName, subtitle: parts.joined(separator: " · "),
+                icon: "carrot.fill", color: .brown,
+                kind: .solid(s)
             ))
         }
 
