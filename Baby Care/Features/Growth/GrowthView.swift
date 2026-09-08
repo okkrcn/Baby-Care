@@ -148,10 +148,17 @@ struct GrowthView: View {
         }
         .chartXAxisLabel("Ay")
         .chartYAxisLabel(unit)
-        .chartXScale(domain: 0...6)
+        .chartXScale(domain: 0...Double(chartMaxMonth))
         .animation(.easeOut(duration: 0.6), value: animateChart)
         .animation(.spring(response: 0.5, dampingFraction: 0.85), value: selectedMetric)
         .onAppear { animateChart = true }
+    }
+
+    /// Grafiğin sağ sınırı: bebeğin yaşından bir miktar ileriyi gösterir ama
+    /// tablo sınırını aşmaz. Sabit 0...24 kullanmak 2 aylık bebekte grafiği
+    /// okunamaz hâle getirirdi.
+    private var chartMaxMonth: Int {
+        min(WHOPercentiles.maxAgeMonths, max(6, baby.ageInMonths + 2))
     }
 
     private func ageMonths(at date: Date) -> Double {
@@ -183,7 +190,7 @@ struct GrowthView: View {
         let months = Int(round(ageMonths(at: rec.recordedAt)))
         let band = WHOPercentiles.percentileBand(
             metric: selectedMetric, sex: sex, ageMonths: months, value: value
-        )
+        ) ?? "Bu yaş için persentil verisi yok"
 
         return VStack(alignment: .leading, spacing: 6) {
             HStack {
