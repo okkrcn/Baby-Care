@@ -6,9 +6,14 @@ import Foundation
 /// Formüller pediatri pratiğinde yaygın olarak kullanılan referans değerlerdir:
 /// - İlk 1 hafta: artan günlük (60→100 ml/kg/gün)
 /// - 1 hafta – 6 ay: 150–180 ml/kg/gün
+/// - 6 – 12 ay: 100–130 ml/kg/gün — ek gıda enerjinin bir kısmını karşılar
+/// - 12 – 24 ay: 70–100 ml/kg/gün — beslenmenin merkezi aile sofrasıdır
+///
+/// Ek gıdadan beklenen günlük enerji (TÜBER 2022): 6-8 ay ~200 kcal,
+/// 9-11 ay ~300 kcal, 12-24 ay ~550 kcal.
 ///
 /// Kaynak: AAP (American Academy of Pediatrics) Pediatric Nutrition Handbook,
-/// T.C. Sağlık Bakanlığı Bebek Beslenmesi Rehberi.
+/// T.C. Sağlık Bakanlığı Türkiye Beslenme Rehberi (TÜBER 2022).
 /// Bu değerler bilgilendirme amaçlıdır; bebeğinizin gerçek ihtiyacı için
 /// pediatristinize danışın. Bebek doyduğu kadar beslenmelidir.
 enum FeedingCalculator {
@@ -28,6 +33,13 @@ enum FeedingCalculator {
         /// Kalori (yaklaşık 67 kcal / 100 ml)
         let dailyCaloriesMin: Int
         let dailyCaloriesMax: Int
+
+        /// Bebeğin bakım dönemi — hesabın hangi kurala göre yapıldığını gösterir.
+        let stage: BabyStage
+        /// Ek gıdadan gelmesi beklenen günlük enerji (kcal). 6 ay altında nil.
+        let solidFoodKcal: Int?
+        /// Süt hedefinin nasıl yorumlanacağına dair kısa not.
+        let milkNote: String
 
         /// Öğün başına ml (averagePerMeal[N öğün])
         func mlPerMeal(forFeedings n: Int) -> Int {
@@ -52,17 +64,36 @@ enum FeedingCalculator {
     ///   - weightKg: Güncel kilo (kg)
     static func calculate(ageDays: Int, weightKg: Double) -> Result {
         let kg = max(0.5, weightKg)
+        let ageMonths = ageDays / 30
+        let stage = BabyStage.forAgeMonths(ageMonths)
 
         let (minPerKg, maxPerKg): (Double, Double)
+        let solidKcal: Int?
+        let note: String
 
         if ageDays < 7 {
             let single = firstWeekMlPerKg(day: max(1, ageDays + 1))
             minPerKg = single
             maxPerKg = single
-        } else {
+            solidKcal = nil
+            note = "İlk günlerde mide kapasitesi hızla artar. Bebek doyduğu kadar beslenmelidir."
+        } else if stage == .newborn {
             // 1 hafta - 6 ay arası standart aralık
             minPerKg = 150
             maxPerKg = 180
+            solidKcal = nil
+            note = "Bu dönemde tek besin anne sütü veya mamadır; ek gıda 6. ayda başlar."
+        } else if stage == .complementary {
+            // Ek gıda enerjinin bir kısmını karşıladığı için süt hedefi düşer.
+            minPerKg = 100
+            maxPerKg = 130
+            solidKcal = ageMonths < 9 ? 200 : 300
+            note = "Anne sütü ana besin olmayı sürdürür; ek gıda yanında verilir, yerine değil."
+        } else {
+            minPerKg = 70
+            maxPerKg = 100
+            solidKcal = 550
+            note = "Bu yaşta beslenmenin merkezi aile sofrasıdır. Anne sütü 2 yaşına kadar sürebilir."
         }
 
         let dailyMin = minPerKg * kg
@@ -75,7 +106,8 @@ enum FeedingCalculator {
         case 0..<30:      typicalFeedings = 9   // 0-1 ay: 8-12, orta 9
         case 30..<90:     typicalFeedings = 7   // 1-3 ay: 6-8
         case 90..<180:    typicalFeedings = 5   // 3-6 ay: 4-6
-        default:          typicalFeedings = 5
+        case 180..<365:   typicalFeedings = 4   // 6-12 ay: süt öğünü azalır
+        default:          typicalFeedings = 3   // 12-24 ay
         }
 
         // Kalori: anne sütü ve standart mama ~67 kcal / 100 ml
@@ -93,7 +125,10 @@ enum FeedingCalculator {
             dailyAverageML: Int(dailyAvg.rounded()),
             typicalFeedingsPerDay: typicalFeedings,
             dailyCaloriesMin: caloriesMin,
-            dailyCaloriesMax: caloriesMax
+            dailyCaloriesMax: caloriesMax,
+            stage: stage,
+            solidFoodKcal: solidKcal,
+            milkNote: note
         )
     }
 }
