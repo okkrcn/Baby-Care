@@ -9,6 +9,7 @@ struct SolidFoodView: View {
         case guide = "Rehber"
         case foods = "Besinler"
         case allergens = "Alerjenler"
+        case assistant = "Asistan"
     }
 
     @State private var tab: Tab = .guide
@@ -32,6 +33,7 @@ struct SolidFoodView: View {
             case .guide:     guideList
             case .foods:     FoodLibraryView(baby: baby)
             case .allergens: AllergenPanelView(baby: baby)
+            case .assistant: SolidFoodAssistantView(baby: baby)
             }
         }
         .navigationTitle("Ek Gıda")

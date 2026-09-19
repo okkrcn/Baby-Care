@@ -1,5 +1,11 @@
 # Baby Care — Kurulum Rehberi (Faz 1)
 
+> **Güncel değil (2026-09-19):** Supabase bağımlılığı ve hesap/household akışı projeden
+> kaldırıldı; uygulama tamamen cihaz-içi (SwiftData) çalışır. Aşağıdaki Supabase ve
+> Sign in with Apple adımları **uygulanmaz**; tarihsel referans için tutuluyor.
+> Güncel kurulum: projeyi Xcode'da açıp çalıştırmak yeterlidir. Yapay zeka asistanı
+> için `docs/AI_SETUP.md`.
+
 Bu belge, geliştirici makinesinde projeyi ayağa kaldırmak için **bir kere** yapılacak işleri listeler. Tahmini süre: **20–30 dakika**.
 
 ---

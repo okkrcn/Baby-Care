@@ -1,6 +1,6 @@
 # Privacy Policy — Baby Care
 
-**Last updated:** June 18, 2026
+**Last updated:** September 19, 2026
 
 ## Summary
 
@@ -32,9 +32,25 @@ With your permission, the app only sends local (on-device) notifications:
 
 Notifications are generated entirely on your device and never originate from a server. You can disable them at any time via Settings → Notifications.
 
+## AI Assistant (optional)
+
+The assistant on the Solid Food screen answers complementary-feeding questions using free, open language models via [OpenRouter](https://openrouter.ai). This feature:
+
+- **Is off by default.** A consent screen explaining exactly what is sent appears on first use; nothing is sent until you accept.
+- **Sends a request only when you type a question**; nothing is transmitted in the background.
+- Can be turned off, and consent withdrawn, at any time under Settings → AI Assistant.
+
+**What is sent:** the baby's age (in months only), foods already tried, allergen introduction statuses, the text of your question and earlier messages in the same chat.
+
+**What is never sent:** the baby's name, birth date, photo, weight/height measurements, vaccination, sleep, diaper and medication records; any identifier about you or your device.
+
+Content you send is subject to OpenRouter's and the responding model provider's privacy terms ([OpenRouter privacy policy](https://openrouter.ai/privacy)). Free models may use requests to improve their services, so please avoid personal details in your questions. Baby Care does not store these chats on any server — Baby Care has no server. If you enter your own OpenRouter key, it is kept only in your device's Keychain.
+
+Assistant answers are for information only; they do not diagnose, recommend medication or doses, or replace professional medical advice.
+
 ## Children's Privacy
 
-This app is intended for parents of newborns (0–6 months). No information about the baby is sent over the internet. No adult user account, email address, or registration is required.
+This app is intended for parents of babies aged 0–24 months. No information about the baby is sent over the internet unless the optional AI Assistant is enabled, and even then only the de-identified summary described above. No adult user account, email address, or registration is required.
 
 ## Data Deletion
 
@@ -48,7 +64,9 @@ Sources: WHO Child Growth Standards, AAP developmental guidelines, and Turkish M
 
 ## Third-Party SDKs and Services
 
-None. The app uses only Apple's system frameworks (SwiftUI, SwiftData, UserNotifications, Charts).
+No third-party SDK is embedded; the app uses only Apple's system frameworks (SwiftUI, SwiftData, UserNotifications, Charts).
+
+The only external service is the OpenRouter API described above, used solely when you explicitly enable the AI Assistant.
 
 ## Changes
 

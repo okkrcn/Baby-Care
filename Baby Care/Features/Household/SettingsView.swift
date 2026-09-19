@@ -19,7 +19,7 @@ struct SettingsView: View {
         NavigationStack {
             List {
                 Section("Hakkında") {
-                    LabeledContent("Sürüm", value: "1.0 (Faz 3)")
+                    LabeledContent("Sürüm", value: Self.versionString)
                     LabeledContent("Mod", value: "Cihaz-içi (offline)")
                 }
 
@@ -118,6 +118,18 @@ struct SettingsView: View {
                     }
                 }
 
+                Section {
+                    NavigationLink {
+                        AIAssistantSettingsView()
+                    } label: {
+                        Label("Yapay Zeka Asistanı", systemImage: "sparkles")
+                    }
+                } header: {
+                    Text("Ek Gıda")
+                } footer: {
+                    Text("İsteğe bağlı. Açıldığında yalnız ek gıda soruları için OpenRouter'ın ücretsiz modelleri kullanılır; bebeğin adı ve ölçümleri gönderilmez.")
+                }
+
                 Section("Yedekleme") {
                     NavigationLink {
                         BackupView()
@@ -162,6 +174,14 @@ struct SettingsView: View {
                 await refreshNotificationStatus()
             }
         }
+    }
+
+    /// Info.plist'ten okunur; pazarlama sürümü ve build numarası.
+    private static var versionString: String {
+        let info = Bundle.main.infoDictionary
+        let version = info?["CFBundleShortVersionString"] as? String ?? "—"
+        let build = info?["CFBundleVersion"] as? String ?? "—"
+        return "\(version) (\(build))"
     }
 
     // MARK: - Notification status
@@ -252,6 +272,9 @@ struct SettingsView: View {
             try modelContext.delete(model: Medication.self)
             try modelContext.delete(model: MedicationDose.self)
             try modelContext.delete(model: PediatricContact.self)
+            try modelContext.delete(model: BreastMilkBatch.self)
+            try modelContext.delete(model: SolidFoodRecord.self)
+            try modelContext.delete(model: AllergenIntroduction.self)
             try modelContext.save()
             Task {
                 let center = UNUserNotificationCenter.current()

@@ -13,3 +13,6 @@ Config.local.xcconfig
 
 # SwiftPM
 .swiftpm/
+
+# OpenRouter / yapay zeka anahtarları (bkz. docs/AI_SETUP.md)
+AISecrets.plist
