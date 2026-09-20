@@ -29,7 +29,7 @@ Tasarım dokümanındaki (2026-09-08) Faz 1 kapsamı **tamamen uygulanmış**:
 | E-2 | Ayarlar → "Tüm Verileri Sıfırla" `SolidFoodRecord`, `AllergenIntroduction` ve `BreastMilkBatch` kayıtlarını silmiyordu (veri kalıyordu). | Düzeltildi. |
 | E-3 | Ayarlar'da sürüm "1.0 (Faz 3)" sabit yazıyordu. | Info.plist'ten okunur oldu. |
 | E-4 | Gizlilik politikası "0–6 ay" ve "hiçbir dış servis yok" diyordu; asistanla çelişirdi. | TR/EN politikalar güncellendi (isteğe bağlı asistan bölümü). |
-| E-5 | `docs/SETUP.md` kaldırılmış Supabase kurulumunu anlatıyordu. | "Güncel değil" notu eklendi. |
+| E-5 | `docs/SETUP.md` kaldırılmış Supabase kurulumunu anlatıyordu. | Rehber ve `supabase/schema.sql` silindi (2026-09-21). |
 | E-6 | App Review notları 0–6 ay diyordu; AI için açıklama yoktu. | Güncellendi; App Privacy etiketi uyarısı eklendi. |
 
 ## 3. Yayın öncesi hâlâ yapılması gerekenler (kod dışı)
