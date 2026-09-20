@@ -13,6 +13,8 @@ final class SolidFoodScreenshotTests: XCTestCase {
 
     override func setUpWithError() throws {
         continueAfterFailure = false
+        // Simülatör yatay kalmışsa tembel listelerde satırlar ekran dışında kalıyor
+        XCUIDevice.shared.orientation = .portrait
         app = XCUIApplication()
         app.launch()
         dismissSystemAlertIfPresent()
