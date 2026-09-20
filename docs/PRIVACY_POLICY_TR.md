@@ -1,10 +1,12 @@
 # Gizlilik Politikası — Baby Care
 
-**Son güncelleme:** 18 Haziran 2026
+**Son güncelleme:** 19 Eylül 2026
 
 ## Özet
 
 Baby Care, sizin ve bebeğiniz hakkındaki **hiçbir veriyi toplamaz, paylaşmaz veya internete göndermez**. Tüm bilgiler yalnızca cihazınızda saklanır.
+
+Tek istisna, **isteğe bağlı ve varsayılan olarak kapalı** olan Yapay Zeka Asistanı'dır. Onu açarsanız, yalnız siz soru sorduğunuzda ve yalnız aşağıda "Yapay Zeka Asistanı" bölümünde listelenen kimliksiz bilgiler OpenRouter'a gönderilir.
 
 ## Toplanan Veriler
 
@@ -32,9 +34,25 @@ Bu veriler yalnızca cihazınızdaki yerel veritabanında (Apple SwiftData) sakl
 
 Bildirimler yalnızca cihazınızda oluşturulur ve hiçbir sunucudan gelmez. İstediğiniz zaman Ayarlar → Bildirimler menüsünden iptal edebilirsiniz.
 
+## Yapay Zeka Asistanı (isteğe bağlı)
+
+Ek Gıda ekranındaki asistan, ebeveynin ek gıda sorularını yanıtlamak için [OpenRouter](https://openrouter.ai) üzerinden ücretsiz açık kaynaklı dil modelleri kullanır. Bu özellik:
+
+- **Varsayılan olarak kapalıdır.** İlk kullanımda ne gönderileceğini açıklayan bir rıza ekranı gösterilir; kabul etmeden hiçbir istek çıkmaz.
+- **Yalnız siz soru yazdığınızda** istek gönderir; arka planda veri iletmez.
+- Ayarlar → Yapay Zeka Asistanı bölümünden istediğiniz zaman kapatılabilir ve rıza geri alınabilir.
+
+**Gönderilen bilgiler:** bebeğin yaşı (yalnızca ay olarak), denenen besinler, alerjen tanıtım durumları, sorunuzun metni ve aynı sohbetteki önceki mesajlar.
+
+**Gönderilmeyen bilgiler:** bebeğin adı, doğum tarihi, fotoğrafı, kilo/boy ölçümleri, aşı, uyku, bez ve ilaç kayıtları; sizinle ilgili herhangi bir kimlik veya cihaz bilgisi.
+
+Gönderilen içerik OpenRouter'ın ve isteği işleyen model sağlayıcısının gizlilik koşullarına tabidir ([OpenRouter gizlilik politikası](https://openrouter.ai/privacy)). Ücretsiz modeller istekleri hizmet iyileştirme amacıyla kullanabilir; bu yüzden sorularınızda kişisel bilgi yazmamanızı öneririz. Baby Care bu sohbetleri kendi sunucusunda saklamaz — Baby Care'in sunucusu yoktur. Kendi OpenRouter anahtarınızı girerseniz anahtar yalnız cihazınızın Keychain'inde tutulur.
+
+Asistan yanıtları bilgilendirme amaçlıdır; tanı koymaz, ilaç veya doz önermez, hekim önerisinin yerini tutmaz.
+
 ## Çocuk Gizliliği
 
-Bu uygulama 0-6 aylık bebeklerin ebeveynleri içindir. Bebeğin hiçbir bilgisi internete gönderilmez. Yetişkin kullanıcının hesabı, e-posta veya kayıt zorunluluğu yoktur.
+Bu uygulama 0–24 aylık bebeklerin ebeveynleri içindir. İsteğe bağlı Yapay Zeka Asistanı açılmadıkça bebeğin hiçbir bilgisi internete gönderilmez; açıldığında da yalnız yukarıda tarif edilen kimliksiz özet gider. Yetişkin kullanıcının hesabı, e-posta veya kayıt zorunluluğu yoktur.
 
 ## Veri Silme
 
@@ -48,7 +66,9 @@ Kaynaklar: T.C. Sağlık Bakanlığı Genişletilmiş Bağışıklama Programı,
 
 ## Üçüncü Taraf SDK ve Servisler
 
-Yok. Uygulama yalnızca Apple'ın sistem çerçevelerini (SwiftUI, SwiftData, UserNotifications, Charts) kullanır.
+Uygulamaya gömülü üçüncü taraf SDK yoktur; yalnızca Apple'ın sistem çerçeveleri (SwiftUI, SwiftData, UserNotifications, Charts) kullanılır.
+
+Tek dış servis, yukarıda açıklanan ve yalnız açıkça etkinleştirildiğinde çalışan OpenRouter API'sidir.
 
 ## Değişiklikler
 

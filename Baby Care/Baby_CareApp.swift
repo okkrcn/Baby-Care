@@ -12,6 +12,7 @@ import SwiftData
 struct Baby_CareApp: App {
     @State private var selectedBabyStore = SelectedBabyStore()
     @State private var nightModeStore = NightModeStore()
+    @State private var aiAssistantStore = AIAssistantStore()
 
     /// AppIntents (App Shortcuts) tarafından erişilen paylaşımlı container.
     static let sharedModelContainer: ModelContainer = {
@@ -43,6 +44,7 @@ struct Baby_CareApp: App {
             RootView()
                 .environment(selectedBabyStore)
                 .environment(nightModeStore)
+                .environment(aiAssistantStore)
                 .preferredColorScheme(nightModeStore.isActive ? .dark : nil)
                 .tint(nightModeStore.isActive ? .red : .pink)
         }

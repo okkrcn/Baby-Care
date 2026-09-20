@@ -5,11 +5,19 @@ App Store Connect → uygulama → **App Review Information** bölümüne yapı�
 ## App Review Information → Notes (İngilizce, review ekibi için)
 
 ```
-This app is a fully offline baby-care tracker for parents of 0–6 month-old babies.
+This app is a local-first baby-care tracker for parents of 0–24 month-old babies.
 
 - No account or login is required. There is no demo account needed.
 - All data is stored locally on the device (SwiftData). The app does not collect,
   transmit, or share any user data, and contains no analytics, ads, or tracking.
+- Optional AI assistant (Solid Food → Assistant tab, off by default): after an
+  explicit in-app consent screen, the user's typed question plus a de-identified
+  summary (baby age in months, foods tried, allergen statuses) is sent to the
+  OpenRouter API to get a text answer from free open models. No name, birth date,
+  photo, measurements or identifiers are sent. The feature can be disabled and
+  consent withdrawn in Settings → AI Assistant. Answers carry a medical disclaimer.
+  To test: Settings → AI Assistant → enter an OpenRouter key (free tier is enough),
+  then open a baby aged 6+ months → Solid Food → Assistant.
 - The app shows informational health content (vaccination schedule based on the
   Turkish MoH 2026 immunization program, WHO growth percentiles, first-aid and
   symptom guidance). A medical disclaimer is shown in-app and in the listing:
@@ -70,3 +78,17 @@ Uygulama bir takip aracıdır; beslenme kararı ebeveyn ve hekimindir.
 
 **Acil durum yönlendirmesi:** Anafilaksi ve boğulma ekranları kullanıcıyı
 112'ye yönlendirir. Uygulama içinden arama başlatılmaz; yalnızca bilgi verilir.
+
+
+## Sürüm 1.6 — Yapay Zeka Asistanı (isteğe bağlı)
+
+- **Varsayılan kapalı**; ilk kullanımda rıza ekranı. Rıza olmadan ağ isteği çıkmaz.
+- Yalnız OpenRouter'ın ücretsiz modelleri kullanılır; uygulama içi satın alma yoktur.
+- Gönderilen veri kimliksizdir (ay cinsinden yaş, denenen besinler, alerjen durumları, soru metni).
+- **App Privacy etiketi güncellenmeli:** asistan açıkken "Other User Content"
+  (soru metni) ve "Health & Fitness → Other Health Data" (kimliksiz beslenme özeti)
+  kategorileri "Data Not Linked to You / App Functionality" olarak işaretlenir.
+  Asistan kapalıyken hiçbir veri gönderilmediği için not alanında bunun isteğe
+  bağlı olduğu belirtilir.
+- Yanıtlar bilgilendirme amaçlıdır; her ekranda sorumluluk ibaresi ve 112 uyarısı var.
+- Uygulama tarafı ayrıntıları: `docs/AI_SETUP.md`.
