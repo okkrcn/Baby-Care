@@ -36,7 +36,9 @@ nonisolated enum FreeModelCatalog {
 
     /// Uzak listeden ücretsiz modelleri tercih sırasına göre dizer.
     static func select(from remote: [OpenRouterModel], preferred: [String] = preferred) -> [String] {
-        let free = remote.filter { isFree($0) && ($0.contextLength ?? .max) >= minimumContextLength }
+        let free = remote.filter {
+            isFree($0) && isTextOnlyOutput($0) && ($0.contextLength ?? .max) >= minimumContextLength
+        }
         let freeIDs = Set(free.map(\.id))
 
         var chain = preferred.filter { freeIDs.contains($0) }
@@ -48,6 +50,13 @@ nonisolated enum FreeModelCatalog {
         chain.append(contentsOf: extras)
 
         return Array(chain.prefix(maxChain))
+    }
+
+    /// Fiyatı sıfır olan ses/görsel üreten önizleme modelleri de listede
+    /// görünür; sohbet zincirine girerlerse yanıt bozulur. Alan yoksa metin sayılır.
+    private static func isTextOnlyOutput(_ model: OpenRouterModel) -> Bool {
+        guard let output = model.architecture?.outputModalities else { return true }
+        return output == ["text"]
     }
 
     private static func isZero(_ price: String?) -> Bool {

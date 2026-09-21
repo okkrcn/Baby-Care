@@ -43,13 +43,22 @@ nonisolated struct OpenRouterModel: Decodable, Sendable, Equatable {
         let completion: String?
     }
 
+    struct Architecture: Decodable, Sendable, Equatable {
+        let outputModalities: [String]?
+
+        enum CodingKeys: String, CodingKey {
+            case outputModalities = "output_modalities"
+        }
+    }
+
     let id: String
     let name: String?
     let contextLength: Int?
     let pricing: Pricing?
+    let architecture: Architecture?
 
     enum CodingKeys: String, CodingKey {
-        case id, name, pricing
+        case id, name, pricing, architecture
         case contextLength = "context_length"
     }
 }
