@@ -11,6 +11,9 @@ Config.local.xcconfig
 # Claude Code local settings
 .claude/settings.local.json
 
+# Codex local settings
+.codex/
+
 # SwiftPM
 .swiftpm/
 
