@@ -26,13 +26,14 @@
 <body>
   <div class="hero">
     <h1>Gizlilik Politikası</h1>
-    <p>Baby Care · Son güncelleme: 18 Haziran 2026</p>
+    <p>Baby Care · Son güncelleme: 22 Eylül 2026</p>
   </div>
   <div class="wrap">
     <a class="back" href="index.html">← Destek sayfasına dön</a>
 
     <h2>Özet</h2>
     <p>Baby Care, sizin ve bebeğiniz hakkındaki <strong>hiçbir veriyi toplamaz, paylaşmaz veya internete göndermez</strong>. Tüm bilgiler yalnızca cihazınızda saklanır.</p>
+    <p>Tek istisna, <strong>isteğe bağlı ve varsayılan olarak kapalı</strong> olan Yapay Zeka Asistanı'dır. Onu açarsanız, yalnız siz soru sorduğunuzda ve yalnız aşağıda "Yapay Zeka Asistanı" bölümünde listelenen kimliksiz bilgiler OpenRouter'a gönderilir.</p>
 
     <h2>Toplanan Veriler</h2>
     <p>Hiçbir kişisel veri toplanmaz. Uygulama herhangi bir sunucuya veri göndermez, analitik servisi kullanmaz, reklam ağına bağlanmaz ve üçüncü taraflarla bilgi paylaşmaz.</p>
@@ -45,6 +46,7 @@
       <li>Aşı takvimi ve tamamlanma durumu</li>
       <li>Büyüme ölçümleri (kilo, boy, baş çevresi)</li>
       <li>Vitamin ve ilaç takibi</li>
+      <li>Ek gıda öğünleri ve alerjen tanıtım kayıtları</li>
       <li>Kullanıcı notları</li>
     </ul>
     <p>Bu veriler yalnızca cihazınızdaki yerel veritabanında (Apple SwiftData) saklanır. iCloud yedekleme açıksa, sistem yedekleme politikası uyarınca diğer cihaz yedeklerinizle birlikte iCloud'a alınabilir — bu işlem Apple tarafından şifreli olarak gerçekleştirilir ve Baby Care'in kontrolünde değildir.</p>
@@ -57,8 +59,20 @@
     </ul>
     <p>Bildirimler yalnızca cihazınızda oluşturulur ve hiçbir sunucudan gelmez. İstediğiniz zaman Ayarlar → Bildirimler menüsünden iptal edebilirsiniz.</p>
 
+    <h2>Yapay Zeka Asistanı (isteğe bağlı)</h2>
+    <p>Ek Gıda ekranındaki asistan, ebeveynin ek gıda sorularını yanıtlamak için <a href="https://openrouter.ai">OpenRouter</a> üzerinden ücretsiz açık kaynaklı dil modelleri kullanır. Bu özellik:</p>
+    <ul>
+      <li><strong>Varsayılan olarak kapalıdır.</strong> İlk kullanımda ne gönderileceğini açıklayan bir rıza ekranı gösterilir; kabul etmeden hiçbir istek çıkmaz.</li>
+      <li><strong>Yalnız siz soru yazdığınızda</strong> istek gönderir; arka planda veri iletmez.</li>
+      <li>Ayarlar → Yapay Zeka Asistanı bölümünden istediğiniz zaman kapatılabilir ve rıza geri alınabilir.</li>
+    </ul>
+    <p><strong>Gönderilen bilgiler:</strong> bebeğin yaşı (yalnızca ay olarak), denenen besinler, alerjen tanıtım durumları, sorunuzun metni ve aynı sohbetteki önceki mesajlar.</p>
+    <p><strong>Gönderilmeyen bilgiler:</strong> bebeğin adı, doğum tarihi, fotoğrafı, kilo/boy ölçümleri, aşı, uyku, bez ve ilaç kayıtları; sizinle ilgili herhangi bir kimlik veya cihaz bilgisi.</p>
+    <p>Gönderilen içerik OpenRouter'ın ve isteği işleyen model sağlayıcısının gizlilik koşullarına tabidir (<a href="https://openrouter.ai/privacy">OpenRouter gizlilik politikası</a>). Ücretsiz modeller istekleri hizmet iyileştirme amacıyla kullanabilir; bu yüzden sorularınızda kişisel bilgi yazmamanızı öneririz. Baby Care bu sohbetleri kendi sunucusunda saklamaz — Baby Care'in sunucusu yoktur. Kendi OpenRouter anahtarınızı girerseniz anahtar yalnız cihazınızın Keychain'inde tutulur.</p>
+    <p>Asistan yanıtları bilgilendirme amaçlıdır; tanı koymaz, ilaç veya doz önermez, hekim önerisinin yerini tutmaz.</p>
+
     <h2>Çocuk Gizliliği</h2>
-    <p>Bu uygulama 0–6 aylık bebeklerin ebeveynleri içindir. Bebeğin hiçbir bilgisi internete gönderilmez. Yetişkin kullanıcının hesabı, e-posta veya kayıt zorunluluğu yoktur.</p>
+    <p>Bu uygulama 0–24 aylık bebeklerin ebeveynleri içindir. İsteğe bağlı Yapay Zeka Asistanı açılmadıkça bebeğin hiçbir bilgisi internete gönderilmez; açıldığında da yalnız yukarıda tarif edilen kimliksiz özet gider. Yetişkin kullanıcının hesabı, e-posta veya kayıt zorunluluğu yoktur.</p>
 
     <h2>Veri Silme</h2>
     <p>Tüm verilerinizi istediğiniz zaman Ayarlar → “Tüm Verileri Sıfırla” seçeneğiyle kalıcı olarak silebilirsiniz. Uygulamayı kaldırdığınızda da tüm yerel veri kaldırılır.</p>
@@ -68,7 +82,8 @@
     <p>Kaynaklar: T.C. Sağlık Bakanlığı Genişletilmiş Bağışıklama Programı, Dünya Sağlık Örgütü Çocuk Büyüme Standartları, AAP gelişim rehberleri.</p>
 
     <h2>Üçüncü Taraf SDK ve Servisler</h2>
-    <p>Yok. Uygulama yalnızca Apple'ın sistem çerçevelerini (SwiftUI, SwiftData, UserNotifications, Charts) kullanır.</p>
+    <p>Uygulamaya gömülü üçüncü taraf SDK yoktur; yalnızca Apple'ın sistem çerçeveleri (SwiftUI, SwiftData, UserNotifications, Charts) kullanılır.</p>
+    <p>Tek dış servis, yukarıda açıklanan ve yalnız açıkça etkinleştirildiğinde çalışan OpenRouter API'sidir.</p>
 
     <h2>Değişiklikler</h2>
     <p>Bu politika güncellendiğinde, yeni sürüm App Store sayfasından ve uygulamanın güncel sürümüyle birlikte yayınlanır.</p>

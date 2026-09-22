@@ -107,6 +107,19 @@ KAYNAKLAR
 bebek,ek gıda,tamamlayıcı beslenme,alerjen,yenidoğan,aşı,emzirme,uyku,bez,büyüme,persentil,pediatri
 ```
 
+## What's New (Sürüm 1.6 için)
+
+```
+• Ek gıda dönemi: uygulama artık 0–24 ayı kapsıyor
+• Öğün kaydı, 9 major alerjen takibi ve besin kütüphanesi
+• Ek gıda asistanı (isteğe bağlı): beslenme sorularınızı sorun, bebeğinizin adı ve kimliği paylaşılmaz
+• Aşı takvimi ve büyüme grafikleri 24 aya uzatıldı
+• Haftalık özet ve PDF raporda ek gıda bölümü
+• Boğulma ve alerjik reaksiyon güvenlik rehberi
+
+Asistan varsayılan olarak kapalıdır; Ayarlar'dan açılır ve kapatılır.
+```
+
 ## What's New (Sürüm 1.0 için)
 
 ```
