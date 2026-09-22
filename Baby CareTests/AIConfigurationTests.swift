@@ -86,6 +86,15 @@ struct FreeModelCatalogTests {
         #expect(FreeModelCatalog.select(from: remote) == ["ok/model:free"])
     }
 
+    @Test func nonTextOutputModelsAreSkipped() throws {
+        let json = """
+        {"id":"music/gen","context_length":1000000,"pricing":{"prompt":"0","completion":"0"},
+         "architecture":{"output_modalities":["text","audio"]}}
+        """
+        let music = try JSONDecoder().decode(OpenRouterModel.self, from: Data(json.utf8))
+        #expect(FreeModelCatalog.select(from: [music, model("ok/model:free")]) == ["ok/model:free"])
+    }
+
     @Test func chainIsCapped() {
         let remote = (0..<10).map { model("m/\($0):free", context: 100_000 - $0) }
         #expect(FreeModelCatalog.select(from: remote).count == FreeModelCatalog.maxChain)

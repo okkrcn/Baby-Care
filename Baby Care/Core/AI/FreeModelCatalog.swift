@@ -14,13 +14,14 @@ import Foundation
 nonisolated enum FreeModelCatalog {
 
     /// Sıra önemli: ilki asıl model, kalanlar yedek.
+    /// Liste 2026-09-22'de OpenRouter'ın o günkü ücretsiz listesine göre yenilendi.
     static let preferred: [String] = [
-        "meta-llama/llama-3.3-70b-instruct:free",
-        "google/gemma-3-27b-it:free",
-        "qwen/qwen3-235b-a22b:free",
-        "deepseek/deepseek-chat-v3-0324:free",
-        "mistralai/mistral-small-3.2-24b-instruct:free",
-        "openai/gpt-oss-120b:free",
+        "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "google/gemma-4-31b-it:free",
+        "qwen/qwen3.8-27b:free",
+        "nvidia/nemotron-3-super-120b-a12b:free",
+        "z-ai/glm-5.2:free",
+        "thinkingmachines/inkling:free",
     ]
 
     /// Tek istekte gönderilecek en fazla model sayısı.
@@ -36,7 +37,9 @@ nonisolated enum FreeModelCatalog {
 
     /// Uzak listeden ücretsiz modelleri tercih sırasına göre dizer.
     static func select(from remote: [OpenRouterModel], preferred: [String] = preferred) -> [String] {
-        let free = remote.filter { isFree($0) && ($0.contextLength ?? .max) >= minimumContextLength }
+        let free = remote.filter {
+            isFree($0) && isTextOnlyOutput($0) && ($0.contextLength ?? .max) >= minimumContextLength
+        }
         let freeIDs = Set(free.map(\.id))
 
         var chain = preferred.filter { freeIDs.contains($0) }
@@ -48,6 +51,13 @@ nonisolated enum FreeModelCatalog {
         chain.append(contentsOf: extras)
 
         return Array(chain.prefix(maxChain))
+    }
+
+    /// Fiyatı sıfır olan ses/görsel üreten önizleme modelleri de listede
+    /// görünür; sohbet zincirine girerlerse yanıt bozulur. Alan yoksa metin sayılır.
+    private static func isTextOnlyOutput(_ model: OpenRouterModel) -> Bool {
+        guard let output = model.architecture?.outputModalities else { return true }
+        return output == ["text"]
     }
 
     private static func isZero(_ price: String?) -> Bool {

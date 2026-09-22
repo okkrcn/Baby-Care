@@ -17,13 +17,13 @@ Feed, sleep, vaccines, growth
 ## Promotional Text (170 char limit)
 
 ```
-Track feeding, sleep, diapers, vaccines and growth for your 0–6 month newborn. Aligned with WHO percentile charts and Turkish Ministry of Health 2026 immunization program.
+From birth to age 2: feeding, sleep, diapers, vaccines and solid foods in one place. Based on official Ministry of Health and WHO sources.
 ```
 
 ## Description (4000 char limit)
 
 ```
-Baby Care is a free, privacy-first app for tracking newborn care (0–6 months). All your data stays on your device — no cloud, no account, no ads.
+Baby Care is a free, privacy-first app for tracking your baby's care from birth to age 2. All your data stays on your device — no cloud, no account, no ads.
 
 🍼 FEEDING
 • Breastfeeding (left/right + duration) and bottle feeding (ml) entries
@@ -95,6 +95,19 @@ SOURCES
 
 ```
 baby,newborn,vaccine,breastfeeding,sleep,diaper,growth,percentile,vitamin d,pediatric,mom,dad
+```
+
+## What's New (for version 1.6)
+
+```
+• Solid foods: the app now covers 0–24 months
+• Meal logging, tracking of the 9 major allergens, and a food library
+• Solid-food assistant (optional): ask feeding questions; your baby's name and identity are never shared
+• Vaccination schedule and growth charts extended to 24 months
+• Solid-food section in the weekly summary and PDF report
+• Choking and allergic reaction safety guide
+
+The assistant is off by default and can be turned on or off in Settings.
 ```
 
 ## What's New (for version 1.0)
