@@ -23,11 +23,10 @@ Apple App Store Connect, Privacy Policy için **canlı bir URL** ister. İki se�
 4. Create public gist
 5. Açılan URL'i kopyala (Raw butonu üzerine sağ tık → URL kopyala daha güzel)
 
-### Seçenek B — GitHub Pages (daha profesyonel)
-1. GitHub'da `baby-care-privacy` adında public repo oluştur
-2. `README.md` olarak privacy policy içeriğini yapıştır
-3. Settings → Pages → Source: main branch
-4. URL: `https://okkaracan.github.io/baby-care-privacy/`
+### Seçenek B — Bu deponun GitHub Pages'i
+`gh-pages` dalı. `okkaracan.github.io` hesabı yok; o adres 404 verir.
+- Destek: `https://okkrcn.github.io/Baby-Care/`
+- Gizlilik: `https://okkrcn.github.io/Baby-Care/privacy.html`
 
 ## 3. Xcode Tarafında Yapılacaklar
 

@@ -131,12 +131,11 @@ Feedback and suggestions are welcome at okkaracan@gmail.com.
 
 Email link: `mailto:okkaracan@gmail.com`
 
-(Or a simple GitHub Pages page: `https://okkaracan.github.io/baby-care-support`)
+(Or the support page: `https://okkrcn.github.io/Baby-Care/`)
 
 ## Privacy Policy URL (required)
 
-Host on a GitHub Gist or GitHub Pages:
-`https://okkaracan.github.io/baby-care-privacy`
+`https://okkrcn.github.io/Baby-Care/privacy.html`
 
 ## Category
 

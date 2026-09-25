@@ -141,7 +141,7 @@ Geri bildirim ve önerilerinizi okkaracan@gmail.com adresine bekliyoruz.
 
 E-posta linki: `mailto:okkaracan@gmail.com`
 
-(Veya basit bir GitHub Pages sayfası: `https://okkaracan.github.io/baby-care-support`)
+(Veya destek sayfası: `https://okkrcn.github.io/Baby-Care/`)
 
 ## Marketing URL (opsiyonel)
 
@@ -149,8 +149,7 @@ Boş bırakılabilir veya destek URL'siyle aynı kullanılabilir.
 
 ## Privacy Policy URL (zorunlu)
 
-GitHub Gist'e yapıştırılıp URL kullanılabilir, veya basit bir GitHub Pages sayfası:
-`https://okkaracan.github.io/baby-care-privacy`
+`https://okkrcn.github.io/Baby-Care/privacy.html`
 
 ## Category
 
