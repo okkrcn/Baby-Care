@@ -1,0 +1,21 @@
+/* Native typography is inherited; no external fonts, images, styles or scripts. */
+.msvf{position:fixed;inset-inline-start:16px;bottom:16px;z-index:2147483000;max-width:min(390px,calc(100vw - 32px));font:inherit;color:#202c26}
+.msvf [hidden]{display:none!important}
+.msvf-panel{background:#fff;padding:20px;border-radius:12px;box-shadow:0 8px 30px #00000024}
+.msvf-title{font:inherit;font-size:17px;font-weight:600;line-height:1.4;letter-spacing:-.01em;margin:0 0 12px}
+.msvf-body{font:inherit;font-size:14px;line-height:1.65;margin:0 0 16px}
+.msvf-actions{display:flex;gap:10px}
+.msvf-choice{flex:1;min-height:44px;padding:10px 12px;border:1px solid currentColor;border-radius:5px;background:transparent;color:inherit;font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.msvf-choice:hover,.msvf-settings:hover{background:#68786f18}
+.msvf-choice:focus-visible,.msvf-settings:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+.msvf-later{font:inherit;font-size:12px;line-height:1.6;margin:14px 0 0}
+.msvf-error{font:inherit;font-size:13px;line-height:1.5;margin:10px 0 0}
+.msvf-error:empty{display:none}
+.msvf-settings{min-height:44px;padding:9px 13px;background:#fff;color:inherit;border:1px solid #7b867f;border-radius:5px;font:inherit;font-size:12px;cursor:pointer}
+.msvf[data-theme="dark"]{color:#f0f4f6}
+.msvf[data-theme="dark"] .msvf-panel,.msvf[data-theme="dark"] .msvf-settings{background:#243742}
+.msvf[data-theme="paper"]{color:#433c33}
+.msvf[data-theme="paper"] .msvf-panel,.msvf[data-theme="paper"] .msvf-settings{background:#fffaf2}
+.msvf[data-theme="green"]{color:#244d3a}
+@media(max-width:480px){.msvf{inset-inline-start:12px;bottom:12px;max-width:calc(100vw - 24px)}.msvf-panel{padding:17px}}
+
