@@ -33,7 +33,9 @@ final class AIAssistantStore {
 
     /// `/models` çağrısından seçilen ücretsiz model zinciri; henüz çekilmediyse
     /// tercih listesi kullanılır.
-    private(set) var modelChain: [String] = FreeModelCatalog.preferred
+    private(set) var modelChain: [String] = Array(
+        FreeModelCatalog.preferred.prefix(FreeModelCatalog.maxChain)
+    )
     private(set) var lastModelRefresh: Date?
 
     /// Asistan ekranının açılabilmesi için gereken üç koşul.

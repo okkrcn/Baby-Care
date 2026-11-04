@@ -9,23 +9,25 @@ import Foundation
 ///  2. `/models` uç noktasından o an ücretsiz olanlar; tercih listesinde
 ///     olmayanlar bağlam uzunluğuna göre yedek olarak eklenir.
 ///
-/// Model listesi çekilemezse `preferred` olduğu gibi kullanılır — OpenRouter
-/// var olmayan modeli atlayıp zincirdeki sonrakine geçer.
+/// Model listesi çekilemezse `preferred` içinden ilk `maxChain` kimlik kullanılır.
+/// OpenRouter var olmayan modeli atlayıp zincirdeki sonrakine geçer.
 nonisolated enum FreeModelCatalog {
 
     /// Sıra önemli: ilki asıl model, kalanlar yedek.
-    /// Liste 2026-09-22'de OpenRouter'ın o günkü ücretsiz listesine göre yenilendi.
+    /// 2026-09-25 canlı deneme: Ultra ve Super Türkçe yanıtladı.
+    /// GLM 5.2 ücretsiz listeden çıktı; Inkling sohbet çağrısında 403 verdi.
+    /// Gemma 31B ve Qwen bu oturumda kotadaydı, Türkçe örnek alınamadı.
     static let preferred: [String] = [
         "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "nvidia/nemotron-3-super-120b-a12b:free",
         "google/gemma-4-31b-it:free",
         "qwen/qwen3.8-27b:free",
-        "nvidia/nemotron-3-super-120b-a12b:free",
-        "z-ai/glm-5.2:free",
-        "thinkingmachines/inkling:free",
+        "poolside/laguna-xs-2.1:free",
     ]
 
     /// Tek istekte gönderilecek en fazla model sayısı.
-    static let maxChain = 5
+    /// OpenRouter `models` alanı 3 kimlikten fazlasını 400 ile reddeder.
+    static let maxChain = 3
 
     /// Asistan için gereken en küçük bağlam penceresi (sistem istemi + katalog).
     static let minimumContextLength = 8_000

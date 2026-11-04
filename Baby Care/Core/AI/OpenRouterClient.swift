@@ -116,11 +116,12 @@ actor OpenRouterClient {
         maxTokens: Int = 700
     ) async throws -> ChatCompletionResult {
         guard configuration.isConfigured else { throw OpenRouterError.notConfigured }
-        guard let primary = models.first else { throw OpenRouterError.noFreeModelAvailable }
+        let chain = Array(models.prefix(FreeModelCatalog.maxChain))
+        guard let primary = chain.first else { throw OpenRouterError.noFreeModelAvailable }
 
         let body = CompletionRequest(
             model: primary,
-            models: models.count > 1 ? models : nil,
+            models: chain.count > 1 ? chain : nil,
             messages: messages,
             temperature: temperature,
             maxTokens: maxTokens
