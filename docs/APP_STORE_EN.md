@@ -23,7 +23,7 @@ From birth to age 2: feeding, sleep, diapers, vaccines and solid foods in one pl
 ## Description (4000 char limit)
 
 ```
-Baby Care is a free, privacy-first app for tracking your baby's care from birth to age 2. All your data stays on your device — no cloud, no account, no ads.
+Baby Care is a free, privacy-first app for tracking your baby's care from birth to age 2. Care records stay on your device. The optional solid-food assistant transfers the information described below only after consent and configuration. No account, ads, or subscription are required.
 
 🍼 FEEDING
 • Breastfeeding (left/right + duration) and bottle feeding (ml) entries
@@ -71,10 +71,16 @@ Baby Care is a free, privacy-first app for tracking your baby's care from birth 
 • Quick switch from the top toolbar
 
 🔒 PRIVACY FIRST
-• No data collected, nothing sent to any server
+• Care records are stored on your device; the optional assistant transfer is described below
 • No account, email, or registration required
-• No ads, no tracking, no third-party SDKs
+• No ads or tracking
 • Delete all your data anytime
+
+OPTIONAL SOLID-FOOD ASSISTANT
+• Off by default; requires explicit consent and configuration
+• Sends the typed question and a summary of age in months, foods tried, and allergen statuses to the AI service
+• Does not send the baby's name, birth date, or measurements
+• Can be disabled and consent withdrawn in Settings
 
 📱 OPTIMIZED FOR iOS 26
 • Liquid Glass design system

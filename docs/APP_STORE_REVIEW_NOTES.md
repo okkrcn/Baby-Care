@@ -8,15 +8,15 @@ App Store Connect → uygulama → **App Review Information** bölümüne yapı�
 This app is a local-first baby-care tracker for parents of 0–24 month-old babies.
 
 - No account or login is required. There is no demo account needed.
-- All data is stored locally on the device (SwiftData). The app does not collect,
-  transmit, or share any user data, and contains no analytics, ads, or tracking.
+- Care records are stored locally on the device (SwiftData). The optional assistant
+  transfers only the data described below; there are no analytics, ads, or tracking.
 - Optional AI assistant (Solid Food → Assistant tab, off by default): after an
   explicit in-app consent screen, the user's typed question plus a de-identified
   summary (baby age in months, foods tried, allergen statuses) is sent to the
   OpenRouter API to get a text answer from free open models. No name, birth date,
   photo, measurements or identifiers are sent. The feature can be disabled and
   consent withdrawn in Settings → AI Assistant. Answers carry a medical disclaimer.
-  To test: Settings → AI Assistant → enter an OpenRouter key (free tier is enough),
+  To test: Settings → AI Assistant → enter your own OpenRouter key (no key is bundled),
   then open a baby aged 6+ months → Solid Food → Assistant.
 - The app shows informational health content (vaccination schedule based on the
   Turkish MoH 2026 immunization program, WHO growth percentiles, first-aid and
@@ -42,7 +42,9 @@ This app is a local-first baby-care tracker for parents of 0–24 month-old babi
 
 ## App Privacy (Nutrition Label)
 
-- "Data Collection" → **We do not collect data from this app.** (Hiçbir kutu işaretlenmez.)
+- 1.6 asistanı için **Health** ve **Other User Content** beyan edilir. Kullanım amacı
+  App Functionality; takip amacı yoktur. Kullanıcının kendi OpenRouter anahtarı
+  istekleri hizmet hesabına bağlayabildiğinden "linked to user" seçimi ihtiyatlıdır.
 
 ## Privacy Policy URL
 
@@ -86,8 +88,8 @@ Uygulama bir takip aracıdır; beslenme kararı ebeveyn ve hekimindir.
 - Yalnız OpenRouter'ın ücretsiz modelleri kullanılır; uygulama içi satın alma yoktur.
 - Gönderilen veri kimliksizdir (ay cinsinden yaş, denenen besinler, alerjen durumları, soru metni).
 - **App Privacy etiketi güncellenmeli:** asistan açıkken "Other User Content"
-  (soru metni) ve "Health & Fitness → Other Health Data" (kimliksiz beslenme özeti)
-  kategorileri "Data Not Linked to You / App Functionality" olarak işaretlenir.
+  (soru metni) ve "Health & Fitness → Health" (beslenme özeti)
+  kategorileri "Data Linked to You / App Functionality" olarak işaretlenir.
   Asistan kapalıyken hiçbir veri gönderilmediği için not alanında bunun isteğe
   bağlı olduğu belirtilir.
 - Yanıtlar bilgilendirme amaçlıdır; her ekranda sorumluluk ibaresi ve 112 uyarısı var.

@@ -3,27 +3,27 @@
 ## App Name (30 karakter sınırı)
 
 ```
-Baby Care: Bebek Bakım Rehberi
+Baby Care: Bebek Takibi
 ```
-*(30 karakter)*
+*(23 karakter)*
 
 ## Subtitle (30 karakter sınırı)
 
 ```
-0–2 yaş bebek bakım takibi
+Ek gıda, uyku ve aşı takibi
 ```
-*(22 karakter)*
+*(27 karakter)*
 
 ## Promotional Text (170 karakter sınırı)
 
 ```
-Doğumdan 2 yaşına: beslenme, uyku, bez, aşı ve ek gıda takibi tek yerde. Resmi Sağlık Bakanlığı ve DSÖ kaynaklarına dayanır.
+0–24 ay bebek bakımını tek yerde takip edin: beslenme, uyku, bez, aşı, büyüme ve ek gıda. Ücretsiz, reklamsız ve hesap gerektirmez.
 ```
 
 ## Description (4000 karakter sınırı)
 
 ```
-Baby Care, doğumdan 2 yaşına kadar bebek bakımını basit ve gizliliği koruyarak takip etmenizi sağlayan ücretsiz bir uygulamadır. Tüm verileriniz yalnızca cihazınızda saklanır — bulut, hesap veya reklam yok.
+Baby Care, doğumdan 2 yaşına kadar bebek bakımını basit ve gizliliği koruyarak takip etmenizi sağlayan ücretsiz bir uygulamadır. Bakım kayıtlarınız cihazınızda saklanır. İsteğe bağlı ek gıda asistanı açık rıza ve yapılandırma olmadan ağ isteği göndermez. Hesap, reklam veya abonelik yoktur.
 
 🍼 BESLENME TAKİBİ
 • Anne sütü (sol/sağ göğüs + süre) ve biberon (ml) kayıtları
@@ -79,10 +79,16 @@ Baby Care, doğumdan 2 yaşına kadar bebek bakımını basit ve gizliliği koru
 • Üst sekmeden hızlı bebek değiştirme
 
 🔒 GİZLİLİK ODAKLI
-• Hiçbir veri toplanmaz, sunucuya gönderilmez
+• Bakım kayıtları cihazda saklanır; isteğe bağlı asistanın veri aktarımı aşağıda açıklanır
 • Hesap, e-posta, kayıt zorunluluğu yok
-• Reklam yok, takip yok, üçüncü taraf SDK yok
+• Reklam ve takip yok
 • İstediğiniz zaman tüm verilerinizi silebilirsiniz
+
+EK GIDA ASİSTANI (İSTEĞE BAĞLI)
+• Varsayılan kapalıdır; açık rıza ve yapılandırma gerektirir
+• Soru metni, ay cinsinden yaş, denenen besinler ve alerjen durumlarının özeti dış hizmete iletilir
+• Bebeğin adı, doğum tarihi ve ölçümleri gönderilmez
+• Ayarlar'dan kapatılabilir ve rıza geri alınabilir
 
 📱 iOS 26 İÇİN OPTİMİZE
 • Liquid Glass tasarım sistemi
@@ -104,7 +110,7 @@ KAYNAKLAR
 ## Keywords (100 karakter sınırı, virgülle ayrılmış)
 
 ```
-bebek,ek gıda,tamamlayıcı beslenme,alerjen,yenidoğan,aşı,emzirme,uyku,bez,büyüme,persentil,pediatri
+yenidoğan,emzirme,bez,büyüme,persentil,alerjen,tamamlayıcı beslenme,gelişim,vitamin,biberon
 ```
 
 ## What's New (Sürüm 1.6 için)
