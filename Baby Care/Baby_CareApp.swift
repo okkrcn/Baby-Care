@@ -29,6 +29,7 @@ struct Baby_CareApp: App {
             BreastMilkBatch.self,
             SolidFoodRecord.self,
             AllergenIntroduction.self,
+            ToothEruption.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

@@ -275,6 +275,7 @@ struct SettingsView: View {
             try modelContext.delete(model: BreastMilkBatch.self)
             try modelContext.delete(model: SolidFoodRecord.self)
             try modelContext.delete(model: AllergenIntroduction.self)
+            try modelContext.delete(model: ToothEruption.self)
             try modelContext.save()
             Task {
                 let center = UNUserNotificationCenter.current()

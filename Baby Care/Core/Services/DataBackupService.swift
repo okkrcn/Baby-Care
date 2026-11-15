@@ -23,6 +23,8 @@ struct DataExportPackage: Codable {
     /// "dosya bozuk" hatası alır.
     let solidFoods: [SolidFoodExport]?
     let allergenIntroductions: [AllergenIntroductionExport]?
+    /// Sürüm 3'te eklendi (diş gelişimi). Eski yedeklerde yoktur.
+    let toothEruptions: [ToothEruptionExport]?
 }
 
 struct BabyExport: Codable {
@@ -133,6 +135,16 @@ struct MilkBatchExport: Codable {
     let updatedAt: Date
 }
 
+struct ToothEruptionExport: Codable {
+    let id: UUID
+    let babyID: UUID
+    let toothID: String
+    let eruptedAt: Date
+    let notes: String?
+    let createdAt: Date
+    let updatedAt: Date
+}
+
 struct SolidFoodExport: Codable {
     let id: UUID
     let babyID: UUID
@@ -188,7 +200,7 @@ enum DataBackupError: LocalizedError {
 
 @MainActor
 enum DataBackupService {
-    static let currentVersion = 2
+    static let currentVersion = 3
 
     // MARK: - Export
 
@@ -205,6 +217,7 @@ enum DataBackupService {
         let contacts    = (try? context.fetch(FetchDescriptor<PediatricContact>())) ?? []
         let solids      = (try? context.fetch(FetchDescriptor<SolidFoodRecord>())) ?? []
         let allergens   = (try? context.fetch(FetchDescriptor<AllergenIntroduction>())) ?? []
+        let teeth       = (try? context.fetch(FetchDescriptor<ToothEruption>())) ?? []
 
         let package = DataExportPackage(
             version: currentVersion,
@@ -221,7 +234,8 @@ enum DataBackupService {
             milkBatches: milks.map(makeExport),
             pediatricContacts: contacts.map(makeExport),
             solidFoods: solids.map(makeExport),
-            allergenIntroductions: allergens.map(makeExport)
+            allergenIntroductions: allergens.map(makeExport),
+            toothEruptions: teeth.map(makeExport)
         )
 
         let encoder = JSONEncoder()
@@ -280,6 +294,7 @@ enum DataBackupService {
             try? context.delete(model: PediatricContact.self)
             try? context.delete(model: SolidFoodRecord.self)
             try? context.delete(model: AllergenIntroduction.self)
+            try? context.delete(model: ToothEruption.self)
         }
 
         // Merge için mevcut id setlerini topla
@@ -295,6 +310,9 @@ enum DataBackupService {
         let existingContactIDs = Set(((try? context.fetch(FetchDescriptor<PediatricContact>())) ?? []).map { $0.id })
         let existingSolidIDs   = Set(((try? context.fetch(FetchDescriptor<SolidFoodRecord>())) ?? []).map { $0.id })
         let existingAllergenIDs = Set(((try? context.fetch(FetchDescriptor<AllergenIntroduction>())) ?? []).map { $0.id })
+        let existingTeeth = mode == .replace ? [] : ((try? context.fetch(FetchDescriptor<ToothEruption>())) ?? [])
+        // Birleştirmede aynı bebeğin aynı dişi ikinci kez eklenmez (farklı id olsa bile).
+        var existingToothKeys = Set(existingTeeth.map { "\($0.babyID.uuidString)|\($0.toothID)" })
 
         var importedCount = 0
 
@@ -333,6 +351,12 @@ enum DataBackupService {
             context.insert(r.toModel()); importedCount += 1
         }
         for r in (package.allergenIntroductions ?? []) where mode == .replace || !existingAllergenIDs.contains(r.id) {
+            context.insert(r.toModel()); importedCount += 1
+        }
+
+        for r in (package.toothEruptions ?? []) {
+            let key = "\(r.babyID.uuidString)|\(r.toothID)"
+            guard existingToothKeys.insert(key).inserted else { continue }
             context.insert(r.toModel()); importedCount += 1
         }
 
@@ -401,6 +425,11 @@ private extension DataBackupService {
               customFoodName: m.customFoodName, method: m.methodRaw, amount: m.amountRaw,
               reaction: m.reactionRaw, isFirstTry: m.isFirstTry, notes: m.notes,
               createdAt: m.createdAt, updatedAt: m.updatedAt)
+    }
+
+    static func makeExport(_ m: ToothEruption) -> ToothEruptionExport {
+        .init(id: m.id, babyID: m.babyID, toothID: m.toothID, eruptedAt: m.eruptedAt,
+              notes: m.notes, createdAt: m.createdAt, updatedAt: m.updatedAt)
     }
 
     static func makeExport(_ m: AllergenIntroduction) -> AllergenIntroductionExport {
@@ -508,6 +537,13 @@ extension SolidFoodExport {
             isFirstTry: isFirstTry, notes: notes,
             createdAt: createdAt, updatedAt: updatedAt
         )
+    }
+}
+
+extension ToothEruptionExport {
+    func toModel() -> ToothEruption {
+        ToothEruption(id: id, babyID: babyID, toothID: toothID, eruptedAt: eruptedAt,
+                      notes: notes, createdAt: createdAt, updatedAt: updatedAt)
     }
 }
 

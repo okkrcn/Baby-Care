@@ -31,8 +31,8 @@ struct BackupCompatibilityTests {
         return decoder
     }
 
-    @Test func versionIsTwo() {
-        #expect(DataBackupService.currentVersion == 2)
+    @Test func versionIsThree() {
+        #expect(DataBackupService.currentVersion == 3)
     }
 
     @Test func decodesVersionOnePackageWithoutNewFields() throws {
@@ -44,6 +44,7 @@ struct BackupCompatibilityTests {
         #expect(package.babies.count == 1)
         #expect(package.solidFoods == nil)
         #expect(package.allergenIntroductions == nil)
+        #expect(package.toothEruptions == nil)
     }
 
     @Test func versionOnePackageIsNotRejectedAsIncompatible() throws {
@@ -73,6 +74,10 @@ struct BackupCompatibilityTests {
                 id: UUID(), babyID: babyID, allergen: "egg",
                 status: "tolerated", firstTriedAt: .now, lastServedAt: .now,
                 reactionNotes: nil, createdAt: .now, updatedAt: .now
+            )],
+            toothEruptions: [ToothEruptionExport(
+                id: UUID(), babyID: babyID, toothID: "lower.left.centralIncisor",
+                eruptedAt: .now, notes: "İlk diş", createdAt: .now, updatedAt: .now
             )]
         )
 
@@ -85,6 +90,21 @@ struct BackupCompatibilityTests {
         #expect(decoded.solidFoods?.first?.foodIDs == ["beef", "carrot"])
         #expect(decoded.allergenIntroductions?.first?.allergen == "egg")
         #expect(decoded.allergenIntroductions?.first?.status == "tolerated")
+        #expect(decoded.toothEruptions?.first?.toothID == "lower.left.centralIncisor")
+        #expect(decoded.toothEruptions?.first?.notes == "İlk diş")
+    }
+
+    @Test func toothEruptionExportRoundTripsThroughModel() {
+        let date = Date(timeIntervalSince1970: 1_800_000_000)
+        let original = ToothEruptionExport(
+            id: UUID(), babyID: UUID(), toothID: "upper.right.canine",
+            eruptedAt: date, notes: nil, createdAt: date, updatedAt: date
+        )
+        let model = original.toModel()
+        #expect(model.id == original.id)
+        #expect(model.toothID == "upper.right.canine")
+        #expect(model.eruptedAt == date)
+        #expect(model.tooth?.kind == ToothKind.canine)
     }
 
     @Test func solidFoodExportRoundTripsThroughModel() {
