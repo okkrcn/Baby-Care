@@ -156,9 +156,10 @@ private struct MediumStatusView: View {
                     title: "Bez", icon: "leaf.fill", color: WidgetPalette.diaper,
                     ongoing: nil, last: snapshot.lastDiaperAt
                 ) {
-                    HStack(spacing: 4) {
-                        Button(intent: LogDiaperWidgetIntent(kind: .pee)) { Text("Çiş") }
-                        Button(intent: LogDiaperWidgetIntent(kind: .poo)) { Text("Kaka") }
+                    // Dar kutuda iki düğme sığsın diye metinler tek satıra sabitlenir.
+                    HStack(spacing: 3) {
+                        Button(intent: LogDiaperWidgetIntent(kind: .pee)) { Text("Çiş").lineLimit(1).fixedSize() }
+                        Button(intent: LogDiaperWidgetIntent(kind: .poo)) { Text("Kaka").lineLimit(1).fixedSize() }
                     }
                     .tint(WidgetPalette.diaper)
                 }
@@ -201,7 +202,8 @@ private struct MediumStatusView: View {
             actions()
                 .font(.caption2.weight(.semibold))
         }
-        .padding(8)
+        .padding(.vertical, 8)
+        .padding(.horizontal, 6)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(color.opacity(0.14), in: .rect(cornerRadius: 12))
     }
