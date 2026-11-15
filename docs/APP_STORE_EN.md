@@ -103,6 +103,16 @@ SOURCES
 baby,newborn,vaccine,breastfeeding,sleep,diaper,growth,percentile,vitamin d,pediatric,mom,dad
 ```
 
+## What's New (for version 1.7)
+
+```
+• Home Screen and Lock Screen widgets: time since the last feeding, sleep, and diaper change
+• Log breastfeeding, sleep, and diapers with one tap from the widget, without opening the app
+• Live Activity: breastfeeding and sleep timers on the Lock Screen and in the Dynamic Island, with Finish and Woke Up buttons
+• Teething map: mark primary teeth as they come in and see typical eruption ages
+• Backups now include tooth records
+```
+
 ## What's New (for version 1.6)
 
 ```

@@ -113,6 +113,16 @@ KAYNAKLAR
 yenidoğan,emzirme,bez,büyüme,persentil,alerjen,tamamlayıcı beslenme,gelişim,vitamin,biberon
 ```
 
+## What's New (Sürüm 1.7 için)
+
+```
+• Ana ekran ve kilit ekranı widget'ları: son beslenme, uyku ve bez değişiminin üzerinden geçen süre
+• Widget'tan tek dokunuşla emzirme, uyku ve bez kaydı — uygulamayı açmadan
+• Canlı Etkinlik: emzirme ve uyku sayacı kilit ekranında ve Dynamic Island'da; "Bitir" ve "Uyandı" düğmeleriyle
+• Diş gelişimi haritası: çıkan süt dişlerini tarihleriyle işaretleyin, tipik çıkış dönemlerini görün
+• Yedekleme diş kayıtlarını da kapsıyor
+```
+
 ## What's New (Sürüm 1.6 için)
 
 ```
