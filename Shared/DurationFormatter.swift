@@ -1,6 +1,7 @@
 import Foundation
 
-enum DurationFormatter {
+/// Uygulama ve widget uzantısı tarafından paylaşılır (`Shared/`).
+nonisolated enum DurationFormatter {
     /// 7245 → "2 sa 0 dk"  ·  120 → "2 dk"  ·  35 → "35 sn"
     static func string(fromSeconds seconds: Int) -> String {
         if seconds < 60 {

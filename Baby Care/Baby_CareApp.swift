@@ -29,6 +29,7 @@ struct Baby_CareApp: App {
             BreastMilkBatch.self,
             SolidFoodRecord.self,
             AllergenIntroduction.self,
+            ToothEruption.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -38,6 +39,10 @@ struct Baby_CareApp: App {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
+
+    init() {
+        TrackingSurfaceSync.start(container: Self.sharedModelContainer)
+    }
 
     var body: some Scene {
         WindowGroup {

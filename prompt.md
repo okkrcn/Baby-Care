@@ -9,6 +9,15 @@ Bu iOS projesinde (SwiftUI + SwiftData, tamamen offline, ücretsiz, paywall yok)
 - AI asistanı: `Baby Care/Core/AI/*` — OpenRouter ücretsiz modeller, varsayılan kapalı, rıza ekranı, anahtar Keychain. Mimari özeti `docs/AI_SETUP.md`.
 - `FreeModelCatalog.preferred` 2026-09-22'de canlı `/models` listesine göre yenilendi; metin dışı çıktı veren modeller (`architecture.output_modalities != ["text"]`) zincire alınmıyor.
 
+## 1.7 hazırlığı: widget + Live Activity (2026-11-16, `feat/widget-live-activity` dalı)
+- Yeni hedef `Baby Care Widgets`: küçük/orta ana ekran widget'ı, kilit ekranı (dikdörtgen + yuvarlak), emzirme/uyku Live Activity + Dynamic Island. Ortak kod `Shared/`. Mimari notu AGENTS.md "Stack" bölümünde.
+- Simülatörde doğrulandı: Dynamic Island kompakt görünüm, kilit ekranı Live Activity, "Uyandı" düğmesinin kaydı bitirip aktiviteyi kapatması, App Group özetinin yazılması.
+- Simülatörde ayrıca doğrulandı (2026-11-16): orta widget'ın galeriden eklenmesi, Çiş düğmesi, Emzir düğmesinin arka planda Live Activity açması, widget'taki Bitir düğmesi.
+- Doğrulanmadı: küçük/kilit ekranı widget'larının ana ekranda görünümü (galeride küçük widget görüldü), Dynamic Island genişletilmiş görünüm, gerçek cihaz.
+- Diş Gelişimi (Bebek → Detaylar): `ToothEruption` modeli, `PrimaryTooth` kataloğu (ADA çıkış tablosu), yedek formatı v3 (`toothEruptions`). Birleştirmede aynı bebeğin aynı dişi tekrar eklenmez. Diş simgesi `Assets.xcassets/ToothIcon` (SF Symbols'da diş yok). Simülatörde haritanın çizimi, diş seçimi, kaydetme ve özet doğrulandı.
+- Intent parametreleri düz `String`: AppEnum parametresi widget sürecinden uygulamaya `nil` geçiyordu.
+- Yayından önce: sürümü 1.7'ye çek (uygulama + uzantı aynı `MARKETING_VERSION`/`CURRENT_PROJECT_VERSION`), Developer portalda `group.okkrcn.Baby-Care` App Group'unu ve `okkrcn.Baby-Care.Widgets` kimliğini kontrol et.
+
 ## Bu makinede test
 ```bash
 xcodebuild test -project "Baby Care.xcodeproj" -scheme "Baby Care" -destination "platform=iOS Simulator,name=iPhone 17 Pro,OS=26.5" -parallel-testing-enabled NO

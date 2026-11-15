@@ -44,6 +44,16 @@ struct BabyProfileView: View {
                         }
 
                         NavigationLink {
+                            TeethView(baby: baby)
+                        } label: {
+                            Label {
+                                Text("Diş Gelişimi")
+                            } icon: {
+                                Image("ToothIcon").renderingMode(.template)
+                            }
+                        }
+
+                        NavigationLink {
                             MedicationView(baby: baby)
                         } label: {
                             Label("Vitamin & İlaç", systemImage: "pills.fill")
