@@ -20,11 +20,13 @@ final class SelectedBabyStore {
     func select(_ baby: Baby) {
         selectedID = baby.id
         UserDefaults.standard.set(baby.id.uuidString, forKey: Self.storageKey)
+        TrackingSurfaceSync.refresh()
     }
 
     func selectByID(_ id: UUID) {
         selectedID = id
         UserDefaults.standard.set(id.uuidString, forKey: Self.storageKey)
+        TrackingSurfaceSync.refresh()
     }
 
     func clearIfMissing(in babies: [Baby]) {
@@ -32,6 +34,7 @@ final class SelectedBabyStore {
         if !babies.contains(where: { $0.id == id }) {
             selectedID = nil
             UserDefaults.standard.removeObject(forKey: Self.storageKey)
+            TrackingSurfaceSync.refresh()
         }
     }
 

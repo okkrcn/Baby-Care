@@ -6,6 +6,7 @@
 ## Stack
 - SwiftUI + SwiftData (offline, tek veri kaynağı cihaz) · Swift Testing (`Baby CareTests`) + XCUITest (`Baby CareUITests`)
 - Dış servis yok; tek istisna isteğe bağlı ek gıda asistanı (`Baby Care/Core/AI/*`, OpenRouter ücretsiz modeller, varsayılan kapalı). Mimari: `docs/AI_SETUP.md`
+- Widget + Live Activity: `Baby Care Widgets` uzantı hedefi (yalnız iOS). Uygulama ile ortak kod `Shared/` (iki hedefe de derlenir; uzantıda `WIDGET_EXTENSION` tanımlı). Widget SwiftData'yı açmaz: uygulama her `didSave` sonrası `TrackingSurfaceSync` ile App Group'a (`group.okkrcn.Baby-Care`) `WidgetSnapshot` yazar ve Live Activity'leri devam eden kayıtlarla eşler. Widget/Live Activity düğmeleri `LiveActivityIntent` olduğu için uygulama sürecinde çalışır (`WidgetActionPerformer`)
 - `supabase/schema.sql` Faz 1 bulut senkronu için bekliyor; supabase-swift paketi kaldırıldı, gerekince yeniden eklenir
 
 ## Komutlar

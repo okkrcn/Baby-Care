@@ -14,10 +14,7 @@ enum QuickLogService {
     @discardableResult
     static func toggleSleep(for baby: Baby, ongoing: SleepRecord?, in context: ModelContext) throws -> String {
         if let ongoing {
-            ongoing.endedAt = .now
-            ongoing.updatedAt = .now
-            try context.save()
-            return "Uyku bitirildi: \(DurationFormatter.string(fromSeconds: ongoing.durationSeconds))"
+            return try endSleep(ongoing, in: context)
         } else {
             let hour = Calendar.current.component(.hour, from: .now)
             let isNap = hour >= 7 && hour < 19
@@ -34,12 +31,7 @@ enum QuickLogService {
     @discardableResult
     static func toggleFeeding(for baby: Baby, ongoing: FeedingRecord?, in context: ModelContext) throws -> String {
         if let ongoing {
-            let now = Date()
-            ongoing.endedAt = now
-            ongoing.durationSeconds = max(1, Int(now.timeIntervalSince(ongoing.startedAt)))
-            ongoing.updatedAt = now
-            try context.save()
-            return "Emzirme bitirildi: \(DurationFormatter.string(fromSeconds: ongoing.durationSeconds ?? 0))"
+            return try endFeeding(ongoing, in: context)
         } else {
             let record = FeedingRecord(
                 babyID: baby.id,
@@ -53,6 +45,26 @@ enum QuickLogService {
             try context.save()
             return "Emzirme başlatıldı (sol)"
         }
+    }
+
+    /// Devam eden uykuyu şimdi bitirir.
+    @discardableResult
+    static func endSleep(_ record: SleepRecord, in context: ModelContext) throws -> String {
+        record.endedAt = .now
+        record.updatedAt = .now
+        try context.save()
+        return "Uyku bitirildi: \(DurationFormatter.string(fromSeconds: record.durationSeconds))"
+    }
+
+    /// Devam eden emzirmeyi şimdi bitirir ve süresini hesaplar.
+    @discardableResult
+    static func endFeeding(_ record: FeedingRecord, in context: ModelContext) throws -> String {
+        let now = Date()
+        record.endedAt = now
+        record.durationSeconds = max(1, Int(now.timeIntervalSince(record.startedAt)))
+        record.updatedAt = now
+        try context.save()
+        return "Emzirme bitirildi: \(DurationFormatter.string(fromSeconds: record.durationSeconds ?? 0))"
     }
 
     /// Verilen miktarda (CC/ml) biberon beslemesi kaydeder.

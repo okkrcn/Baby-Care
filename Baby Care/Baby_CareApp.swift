@@ -39,6 +39,10 @@ struct Baby_CareApp: App {
         }
     }()
 
+    init() {
+        TrackingSurfaceSync.start(container: Self.sharedModelContainer)
+    }
+
     var body: some Scene {
         WindowGroup {
             RootView()
