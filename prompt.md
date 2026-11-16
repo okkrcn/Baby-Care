@@ -24,6 +24,7 @@ Bu iOS projesinde (SwiftUI + SwiftData, tamamen offline, ücretsiz, paywall yok)
 - 1.7 tanıtım metni girildi; açıklamaya "KİLİT EKRANI VE WIDGET'LAR" ve "DİŞ GELİŞİMİ" bölümleri, anahtar kelimelere "diş" eklendi (1.7 incelemesiyle birlikte değerlendirilir).
 - Öne çıkarma başvurusu (App Enhancements, yayın aralığı 17–24 Kasım) gönderildi: Submitted.
 - Uygulama içi etkinlik "Kilit Ekranında Emzirme Sayacı" taslak (Major Update, deep link `babycare://ana`). **Gönderilmedi**: 1.7 build'inde URL şeması yok; 1.7.1 yayına girince tarihleri (şu an 19 Kas–17 Ara) güncelleyip incelemeye gönder.
+- Ayrı yerleşim görselleri (2026-11-17): `docs/screenshots/v1.7/creative/header-3840x1646.png` (21:9, güvenli alan 1646×661 @ 1097,493) ve `search-3840x2560.png` (3:2, güvenli alan 2168×1030 @ 836,765), üretim `scripts/build-appstore-placements.mjs` (`--guides` güvenli alanı çizer). Universal görselde ana öğeler küçük kalıyordu; bunlar her yerleşime göre çizildi. **Henüz yüklenmedi**: Asset Library → Header ve Search Results ayrı ayrı.
 - Bekleyen: görseller onaylanınca ürün sayfasına bağla; sonra Product Page Optimization ile yeni/eski ekran görüntülerini A/B test et.
 - Bilerek yapılmayan: İngilizce mağaza sayfası (uygulama içi yalnız Türkçe, kötü yorum riski), özel ürün sayfaları (dış link/reklam olmadan değeri düşük).
 - main'de build 9 sonrası: `ITSAppUsesNonExemptEncryption = NO` eklendi (sonraki build'lerde şifreleme sorusu çıkmaz).
