@@ -9,14 +9,20 @@ Bu iOS projesinde (SwiftUI + SwiftData, tamamen offline, ücretsiz, paywall yok)
 - AI asistanı: `Baby Care/Core/AI/*` — OpenRouter ücretsiz modeller, varsayılan kapalı, rıza ekranı, anahtar Keychain. Mimari özeti `docs/AI_SETUP.md`.
 - `FreeModelCatalog.preferred` 2026-09-22'de canlı `/models` listesine göre yenilendi; metin dışı çıktı veren modeller (`architecture.output_modalities != ["text"]`) zincire alınmıyor.
 
-## 1.7 hazırlığı: widget + Live Activity (2026-11-16, `feat/widget-live-activity` dalı)
+## 1.7 incelemede (2026-11-16)
+- 1.6 yayında (Ready for Distribution). 1.7 (9) main'den arşivlendi, yüklendi ve 2026-11-16 03:0x'te App Review'a gönderildi: **Waiting for Review**, onaydan sonra otomatik yayın.
+- App Store Connect: Yenilikler (TR) girildi; inceleme notuna 1.7 test yolu eklendi; şifreleme = "None of the algorithms"; yaş derecelendirmesi yeni anketle yanıtlandı → **13+** (tıbbi bilgi "Infrequent" nedeniyle; önceden 4+).
+- Ekran görüntüleri 1.6'dan kaldı; widget/diş haritası görselleri yok.
+- main'de build 9 sonrası: `ITSAppUsesNonExemptEncryption = NO` eklendi (sonraki build'lerde şifreleme sorusu çıkmaz).
+
+## 1.7 hazırlığı: widget + Live Activity (2026-11-16, `feat/widget-live-activity` dalı, main'e alındı)
 - Yeni hedef `Baby Care Widgets`: küçük/orta ana ekran widget'ı, kilit ekranı (dikdörtgen + yuvarlak), emzirme/uyku Live Activity + Dynamic Island. Ortak kod `Shared/`. Mimari notu AGENTS.md "Stack" bölümünde.
 - Simülatörde doğrulandı: Dynamic Island kompakt görünüm, kilit ekranı Live Activity, "Uyandı" düğmesinin kaydı bitirip aktiviteyi kapatması, App Group özetinin yazılması.
 - Simülatörde ayrıca doğrulandı (2026-11-16): orta widget'ın galeriden eklenmesi, Çiş düğmesi, Emzir düğmesinin arka planda Live Activity açması, widget'taki Bitir düğmesi.
 - Doğrulanmadı: küçük/kilit ekranı widget'larının ana ekranda görünümü (galeride küçük widget görüldü), Dynamic Island genişletilmiş görünüm, gerçek cihaz.
 - Diş Gelişimi (Bebek → Detaylar): `ToothEruption` modeli, `PrimaryTooth` kataloğu (ADA çıkış tablosu), yedek formatı v3 (`toothEruptions`). Birleştirmede aynı bebeğin aynı dişi tekrar eklenmez. Diş simgesi `Assets.xcassets/ToothIcon` (SF Symbols'da diş yok). Simülatörde haritanın çizimi, diş seçimi, kaydetme ve özet doğrulandı.
 - Intent parametreleri düz `String`: AppEnum parametresi widget sürecinden uygulamaya `nil` geçiyordu.
-- Yayından önce: sürümü 1.7'ye çek (uygulama + uzantı aynı `MARKETING_VERSION`/`CURRENT_PROJECT_VERSION`), Developer portalda `group.okkrcn.Baby-Care` App Group'unu ve `okkrcn.Baby-Care.Widgets` kimliğini kontrol et.
+- Sürüm 1.7 (9) yapıldı; App Group ve widget kimliğini otomatik imzalama oluşturdu.
 
 ## Bu makinede test
 ```bash
