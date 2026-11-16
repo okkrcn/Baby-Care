@@ -142,3 +142,31 @@ struct TrackingSurfaceSyncTests {
         #expect(WidgetSnapshotStore.load(from: defaults) == nil)
     }
 }
+
+struct WidgetTimeFormatterTests {
+    @Test func shortDurations() {
+        #expect(WidgetTimeFormatter.elapsed(seconds: 20) == "Az önce")
+        #expect(WidgetTimeFormatter.elapsed(seconds: 40 * 60) == "40 dk")
+        #expect(WidgetTimeFormatter.elapsed(seconds: 135 * 60) == "2 sa 15 dk")
+        #expect(WidgetTimeFormatter.ago(seconds: 40 * 60) == "40 dk önce")
+        #expect(WidgetTimeFormatter.ago(seconds: 5) == "Az önce")
+    }
+
+    @Test func longGapsUseDaysInsteadOfOverflowingHours() {
+        // 68 günlük boşluk widget'ta "1636 sa 50 dk" olarak taşıyordu.
+        let seconds = 68 * 86_400 + 4 * 3_600
+        #expect(WidgetTimeFormatter.elapsed(seconds: seconds) == "68 gün")
+        #expect(WidgetTimeFormatter.ago(seconds: seconds) == "68 gün önce")
+        #expect(WidgetTimeFormatter.compact(seconds: seconds) == "68 g")
+        #expect(WidgetTimeFormatter.elapsed(seconds: 86_399) == "23 sa 59 dk")
+    }
+
+    @Test func compactForm() {
+        #expect(WidgetTimeFormatter.compact(seconds: 45 * 60) == "45 dk")
+        #expect(WidgetTimeFormatter.compact(seconds: 3 * 3_600 + 10) == "3 sa")
+    }
+
+    @Test func negativeIntervalsClampToNow() {
+        #expect(WidgetTimeFormatter.elapsed(seconds: -300) == "Az önce")
+    }
+}
