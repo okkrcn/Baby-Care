@@ -16,6 +16,10 @@ Bu iOS projesinde (SwiftUI + SwiftData, tamamen offline, ücretsiz, paywall yok)
 - 1.7 görselleri (2026-11-16): `docs/screenshots/v1.7/` (üretim `scripts/build-appstore-v17.mjs`). 3 ekran görüntüsü (kilit ekranı Live Activity, widget + Dynamic Island, diş haritası) ve arama/başlık için universal creative asset (5244×2950) Asset Library'ye yüklendi, ayrı gönderimle incelemeye gönderildi (Waiting for Review). Onaylanınca ürün sayfasına eklenmeleri gerekiyor: ekran görüntüleri sürüme, universal görsel "Header and Search Results"a. Kopya: `~/Desktop/OuzKRCN/08-Reklam_içerikleri/Baby Care - okkrcn.github.io/`.
 - main'de 1.7 sonrası (1.7.1'e girer): widget'ta 24 saati geçen süreler gün olarak yazılır; puan isteme tüm kayıt yollarını sayar (didSave gözlemcisi); `babycare://` derin bağlantıları (ana, takip, asi, bebek, ayarlar, dis).
 
+## 1.7.1 (10) yüklendi — 2026-11-16
+- main'den arşivlendi ve App Store Connect'e yüklendi (Upload succeeded). İçerik: widget gün biçimi, puan isteme düzeltmesi, `babycare://` derin bağlantıları, `ITSAppUsesNonExemptEncryption = NO`. Testler: 192 birim + 8 UI geçti.
+- **Henüz sürüm oluşturulmadı/gönderilmedi**: 1.7 incelemedeyken App Store Connect yeni iOS sürümü açtırmıyor. 1.7 onaylanınca: 1.7.1 sürümünü oluştur, build 10'u seç, Yenilikler metni `docs/APP_STORE_TR.md`'de, sonra uygulama içi etkinliğin tarihlerini 1.7.1 yayınına göre güncelleyip ikisini gönder.
+
 ## Büyüme (ücretsiz) adımları — 2026-11-16
 - 1.7 tanıtım metni girildi; açıklamaya "KİLİT EKRANI VE WIDGET'LAR" ve "DİŞ GELİŞİMİ" bölümleri, anahtar kelimelere "diş" eklendi (1.7 incelemesiyle birlikte değerlendirilir).
 - Öne çıkarma başvurusu (App Enhancements, yayın aralığı 17–24 Kasım) gönderildi: Submitted.
