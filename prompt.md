@@ -14,7 +14,14 @@ Bu iOS projesinde (SwiftUI + SwiftData, tamamen offline, ücretsiz, paywall yok)
 - App Store Connect: Yenilikler (TR) girildi; inceleme notuna 1.7 test yolu eklendi; şifreleme = "None of the algorithms"; yaş derecelendirmesi yeni anketle yanıtlandı → **13+** (tıbbi bilgi "Infrequent" nedeniyle; önceden 4+).
 - Ekran görüntüleri 1.6'dan kaldı (1.7 incelemedeyken sürümde düzenlenemiyor).
 - 1.7 görselleri (2026-11-16): `docs/screenshots/v1.7/` (üretim `scripts/build-appstore-v17.mjs`). 3 ekran görüntüsü (kilit ekranı Live Activity, widget + Dynamic Island, diş haritası) ve arama/başlık için universal creative asset (5244×2950) Asset Library'ye yüklendi, ayrı gönderimle incelemeye gönderildi (Waiting for Review). Onaylanınca ürün sayfasına eklenmeleri gerekiyor: ekran görüntüleri sürüme, universal görsel "Header and Search Results"a. Kopya: `~/Desktop/OuzKRCN/08-Reklam_içerikleri/Baby Care - okkrcn.github.io/`.
-- main'de 1.7 sonrası düzeltme: widget'ta 24 saati geçen süreler gün olarak yazılır (1.7.1'e girer).
+- main'de 1.7 sonrası (1.7.1'e girer): widget'ta 24 saati geçen süreler gün olarak yazılır; puan isteme tüm kayıt yollarını sayar (didSave gözlemcisi); `babycare://` derin bağlantıları (ana, takip, asi, bebek, ayarlar, dis).
+
+## Büyüme (ücretsiz) adımları — 2026-11-16
+- 1.7 tanıtım metni girildi; açıklamaya "KİLİT EKRANI VE WIDGET'LAR" ve "DİŞ GELİŞİMİ" bölümleri, anahtar kelimelere "diş" eklendi (1.7 incelemesiyle birlikte değerlendirilir).
+- Öne çıkarma başvurusu (App Enhancements, yayın aralığı 17–24 Kasım) gönderildi: Submitted.
+- Uygulama içi etkinlik "Kilit Ekranında Emzirme Sayacı" taslak (Major Update, deep link `babycare://ana`). **Gönderilmedi**: 1.7 build'inde URL şeması yok; 1.7.1 yayına girince tarihleri (şu an 19 Kas–17 Ara) güncelleyip incelemeye gönder.
+- Bekleyen: görseller onaylanınca ürün sayfasına bağla; sonra Product Page Optimization ile yeni/eski ekran görüntülerini A/B test et.
+- Bilerek yapılmayan: İngilizce mağaza sayfası (uygulama içi yalnız Türkçe, kötü yorum riski), özel ürün sayfaları (dış link/reklam olmadan değeri düşük).
 - main'de build 9 sonrası: `ITSAppUsesNonExemptEncryption = NO` eklendi (sonraki build'lerde şifreleme sorusu çıkmaz).
 
 ## 1.7 hazırlığı: widget + Live Activity (2026-11-16, `feat/widget-live-activity` dalı, main'e alındı)
