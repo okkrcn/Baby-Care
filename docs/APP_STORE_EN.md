@@ -103,6 +103,14 @@ SOURCES
 baby,newborn,vaccine,breastfeeding,sleep,diaper,growth,percentile,vitamin d,pediatric,mom,dad
 ```
 
+## What's New (for version 1.7.1)
+
+```
+• Widgets now show long gaps in days instead of hours
+• Teething map and other sections can be opened directly via links
+• Minor improvements
+```
+
 ## What's New (for version 1.7)
 
 ```

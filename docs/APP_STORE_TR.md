@@ -113,6 +113,14 @@ KAYNAKLAR
 yenidoğan,emzirme,bez,büyüme,persentil,alerjen,tamamlayıcı beslenme,gelişim,vitamin,biberon
 ```
 
+## What's New (Sürüm 1.7.1 için)
+
+```
+• Widget'ta uzun süredir kayıt girilmemişse geçen süre artık gün olarak gösteriliyor
+• Diş Gelişimi ve diğer bölümlere doğrudan bağlantıyla açılabilme
+• Küçük iyileştirmeler
+```
+
 ## What's New (Sürüm 1.7 için)
 
 ```
