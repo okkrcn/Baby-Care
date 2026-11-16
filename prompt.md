@@ -12,7 +12,9 @@ Bu iOS projesinde (SwiftUI + SwiftData, tamamen offline, ücretsiz, paywall yok)
 ## 1.7 incelemede (2026-11-16)
 - 1.6 yayında (Ready for Distribution). 1.7 (9) main'den arşivlendi, yüklendi ve 2026-11-16 03:0x'te App Review'a gönderildi: **Waiting for Review**, onaydan sonra otomatik yayın.
 - App Store Connect: Yenilikler (TR) girildi; inceleme notuna 1.7 test yolu eklendi; şifreleme = "None of the algorithms"; yaş derecelendirmesi yeni anketle yanıtlandı → **13+** (tıbbi bilgi "Infrequent" nedeniyle; önceden 4+).
-- Ekran görüntüleri 1.6'dan kaldı; widget/diş haritası görselleri yok.
+- Ekran görüntüleri 1.6'dan kaldı (1.7 incelemedeyken sürümde düzenlenemiyor).
+- 1.7 görselleri (2026-11-16): `docs/screenshots/v1.7/` (üretim `scripts/build-appstore-v17.mjs`). 3 ekran görüntüsü (kilit ekranı Live Activity, widget + Dynamic Island, diş haritası) ve arama/başlık için universal creative asset (5244×2950) Asset Library'ye yüklendi, ayrı gönderimle incelemeye gönderildi (Waiting for Review). Onaylanınca ürün sayfasına eklenmeleri gerekiyor: ekran görüntüleri sürüme, universal görsel "Header and Search Results"a. Kopya: `~/Desktop/OuzKRCN/08-Reklam_içerikleri/Baby Care - okkrcn.github.io/`.
+- main'de 1.7 sonrası düzeltme: widget'ta 24 saati geçen süreler gün olarak yazılır (1.7.1'e girer).
 - main'de build 9 sonrası: `ITSAppUsesNonExemptEncryption = NO` eklendi (sonraki build'lerde şifreleme sorusu çıkmaz).
 
 ## 1.7 hazırlığı: widget + Live Activity (2026-11-16, `feat/widget-live-activity` dalı, main'e alındı)
