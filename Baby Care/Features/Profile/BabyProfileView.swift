@@ -2,6 +2,13 @@ import SwiftUI
 import SwiftData
 
 struct BabyProfileView: View {
+    /// Derin bağlantıdan gelince seçili bebeğin Diş Gelişimi ekranını açar.
+    @Binding var openTeeth: Bool
+
+    init(openTeeth: Binding<Bool> = .constant(false)) {
+        _openTeeth = openTeeth
+    }
+
     @Environment(SelectedBabyStore.self) private var babyStore
     @Query(sort: \Baby.birthDate) private var babies: [Baby]
     @Query(sort: \GrowthRecord.recordedAt) private var allGrowth: [GrowthRecord]
@@ -100,6 +107,11 @@ struct BabyProfileView: View {
                 }
             }
             .navigationTitle("Bebek")
+            .navigationDestination(isPresented: $openTeeth) {
+                if let baby = babyStore.resolved(from: babies) {
+                    TeethView(baby: baby)
+                }
+            }
             .confirmationDialog(
                 deleteCandidate.map { "\($0.name) silinsin mi?" } ?? "Sil",
                 isPresented: Binding(
