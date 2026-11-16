@@ -27,8 +27,18 @@ enum TrackingSurfaceSync {
 
         observers.append(NotificationCenter.default.addObserver(
             forName: ModelContext.didSave, object: nil, queue: .main
-        ) { _ in
-            MainActor.assumeIsolated { refresh() }
+        ) { note in
+            let inserted = (note.userInfo?[ModelContext.NotificationKey.insertedIdentifiers.rawValue]
+                as? [PersistentIdentifier]) ?? []
+            let names = inserted.map(\.entityName)
+            MainActor.assumeIsolated {
+                refresh()
+                // Puan isteme sayacı: hangi ekrandan veya widget'tan gelirse gelsin
+                // başarılı bir bakım kaydı tek etkileşim sayılır.
+                if ReviewRequester.isInteraction(insertedEntityNames: names) {
+                    ReviewRequester.registerInteraction()
+                }
+            }
         })
 
         #if os(iOS)
