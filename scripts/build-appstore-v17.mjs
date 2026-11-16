@@ -123,6 +123,50 @@ function universal({ lockB64, widgetB64, teethB64, islandB64 }) {
     box-shadow:0 40px 90px rgba(59,36,23,.35)}`);
 }
 
+// Uygulama içi etkinlik görselleri: metinsiz (App Store etkinlik adını üstüne yazar).
+// Kart 16:9 (1920x1080), detay 9:16 (1080x1920). Ana sanat ortada, alt üçte bir
+// sakin bırakılır çünkü App Store metni oraya bindirir.
+function eventCard({ lockB64, widgetB64 }) {
+  return pageShell(1920, 1080, `
+  <div class="c">
+    <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+    <div class="phone"><img src="data:image/png;base64,${lockB64}"></div>
+    <img class="widget" src="data:image/png;base64,${widgetB64}">
+  </div>`, `
+  .c{position:relative;width:1920px;height:1080px;overflow:hidden;
+    background:radial-gradient(ellipse at 50% 35%,#FBF4EA 0%,#F3E6D4 60%,#E9D6BD 100%)}
+  .blob{position:absolute;border-radius:50%;filter:blur(6px)}
+  .b1{width:800px;height:800px;left:-260px;top:-300px;background:#EFDCC4;opacity:.8}
+  .b2{width:700px;height:700px;right:-200px;bottom:-320px;background:#CFEDE5;opacity:.6}
+  .b3{width:420px;height:420px;right:520px;top:-180px;background:#D9EEE7;opacity:.5}
+  .phone{position:absolute;left:560px;top:70px;width:300px;border:8px solid ${COLORS.frame};border-radius:46px;
+    overflow:hidden;background:#000;box-shadow:0 34px 80px rgba(59,36,23,.38)}
+  .phone img{display:block;width:100%;height:auto}
+  .widget{position:absolute;left:910px;top:200px;width:470px;border-radius:38px;box-shadow:0 26px 60px rgba(59,36,23,.33)}`);
+}
+
+function eventDetail({ teethB64, widgetB64, islandB64 }) {
+  return pageShell(1080, 1920, `
+  <div class="c">
+    <div class="blob b1"></div><div class="blob b2"></div>
+    <img class="island" src="data:image/png;base64,${islandB64}">
+    <img class="widget" src="data:image/png;base64,${widgetB64}">
+    <div class="phone"><img src="data:image/png;base64,${teethB64}"></div>
+  </div>`, `
+  .c{position:relative;width:1080px;height:1920px;overflow:hidden;
+    background:radial-gradient(ellipse at 50% 30%,#FBF4EA 0%,#F3E6D4 60%,#E9D6BD 100%)}
+  .blob{position:absolute;border-radius:50%;filter:blur(6px)}
+  .b1{width:900px;height:900px;left:-380px;top:-300px;background:#EFDCC4;opacity:.8}
+  .b2{width:800px;height:800px;right:-300px;bottom:-200px;background:#CFEDE5;opacity:.55}
+  .island{position:absolute;left:50%;transform:translateX(-50%);top:150px;width:640px;border-radius:999px;
+    box-shadow:0 22px 50px rgba(59,36,23,.3)}
+  .widget{position:absolute;left:50%;transform:translateX(-50%);top:330px;width:820px;border-radius:58px;
+    box-shadow:0 30px 70px rgba(59,36,23,.33)}
+  .phone{position:absolute;left:50%;transform:translateX(-50%);top:780px;width:440px;border:10px solid ${COLORS.frame};
+    border-radius:60px;overflow:hidden;background:#000;box-shadow:0 34px 80px rgba(59,36,23,.38);height:760px}
+  .phone img{display:block;width:100%;height:auto}`);
+}
+
 async function shoot(html, w, h, out, tmp, name) {
   const htmlPath = join(tmp, name + ".html");
   const rawPng = join(tmp, name + "-raw.png");
@@ -183,5 +227,10 @@ await shoot(phoneSlide({ title: "Süt dişlerini<br>tek tek işaretleyin", rawB6
 
 await shoot(universal({ lockB64: b64(lockRaw), widgetB64, teethB64: b64(teethRaw), islandB64 }), 5244, 2950,
   join(CREATIVE, "universal-5244x2950.png"), tmp, "universal");
+
+const EVENT = join(V17, "event");
+mkdirSync(EVENT, { recursive: true });
+await shoot(eventCard({ lockB64: b64(lockRaw), widgetB64 }), 1920, 1080, join(EVENT, "event-card-1920x1080.png"), tmp, "evcard");
+await shoot(eventDetail({ teethB64: b64(teethRaw), widgetB64, islandB64 }), 1080, 1920, join(EVENT, "event-detail-1080x1920.png"), tmp, "evdetail");
 
 console.log("\nTamamlandı →", V17.replace(ROOT + "/", ""));
