@@ -68,6 +68,7 @@ Apple App Store Connect, Privacy Policy için **canlı bir URL** ister. İki se�
 ### 4.3 Pricing and Availability
 - **Price**: Free
 - **Availability**: Türkiye + tüm ülkeler (istediğin gibi)
+- **China mainland satışta değil** (2026-11-17'de kaldırıldı): Çin, güvenlik değerlendirmesi raporu ve AIGC kaydı istiyor (son tarih 31 Ocak 2027); isteğe bağlı ek gıda asistanı yurt dışı modellere gittiği için karşılanamıyor. Yeniden eklemeden önce bu iki şartı çöz.
 
 ### 4.4 App Privacy
 - **Data Collection**: "We do not collect data from this app" → ✅
