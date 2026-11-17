@@ -118,6 +118,7 @@ yenidoğan,emzirme,bez,büyüme,persentil,alerjen,tamamlayıcı beslenme,gelişi
 ```
 • Widget'ta uzun süredir kayıt girilmemişse geçen süre artık gün olarak gösteriliyor
 • Diş Gelişimi ve diğer bölümlere doğrudan bağlantıyla açılabilme
+• Büyüme grafiğindeki persentil çizgileri düzeltildi
 • Küçük iyileştirmeler
 ```
 

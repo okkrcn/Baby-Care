@@ -19,7 +19,7 @@ Bu iOS projesinde (SwiftUI + SwiftData, tamamen offline, ücretsiz, paywall yok)
 ## 1.7.1 (10) yüklendi — 2026-11-16
 - main'den arşivlendi ve App Store Connect'e yüklendi (Upload succeeded). İçerik: widget gün biçimi, puan isteme düzeltmesi, `babycare://` derin bağlantıları, `ITSAppUsesNonExemptEncryption = NO`. Testler: 192 birim + 8 UI geçti.
 - **1.7.1 (11) yüklendi — 2026-11-17** (Upload succeeded): build 10'a ek olarak iPhone Duo düzeltmeleri (diş haritası, büyüme grafiği). Build 10 kullanılmayacak.
-- 1.7 onaylandı (2026-11-17, Ready for Distribution). **Sürüm henüz oluşturulmadı/gönderilmedi**: 1.7.1 sürümünü oluştur, **build 11'i** seç, Duo ekran görüntülerini (`docs/screenshots/v1.7/duo/appstore/`) ekle, Yenilikler metni `docs/APP_STORE_TR.md`'de, sonra uygulama içi etkinliğin tarihlerini 1.7.1 yayınına göre güncelleyip ikisini gönder.
+- 1.7 onaylandı (2026-11-17, Ready for Distribution). **1.7.1 sürümü oluşturuldu (Prepare for Submission)**: build 11 seçili, Yenilikler girildi ve kaydedildi (2026-11-17). **Gönderilmedi**: Duo ekran görüntülerini (`docs/screenshots/v1.7/duo/appstore/`) ekle, Yenilikler metni `docs/APP_STORE_TR.md`'de, sonra uygulama içi etkinliğin tarihlerini 1.7.1 yayınına göre güncelleyip ikisini gönder.
 
 ## Büyüme (ücretsiz) adımları — 2026-11-16
 - 1.7 tanıtım metni girildi; açıklamaya "KİLİT EKRANI VE WIDGET'LAR" ve "DİŞ GELİŞİMİ" bölümleri, anahtar kelimelere "diş" eklendi (1.7 incelemesiyle birlikte değerlendirilir).
