@@ -102,7 +102,9 @@ struct GrowthView: View {
 
     @ViewBuilder
     private var chartView: some View {
-        let rows = WHOPercentiles.data(for: selectedMetric, sex: sex)
+        // Swift Charts ölçek dışındaki işaretleri kırpmaz; tablo görünen aralıkla sınırlanır.
+        let maxMonth = chartMaxMonth
+        let rows = WHOPercentiles.data(for: selectedMetric, sex: sex).filter { $0.month <= maxMonth }
         let unit = selectedMetric.unitLabel
 
         Chart {
@@ -115,19 +117,23 @@ struct GrowthView: View {
                 )
                 .foregroundStyle(.green.opacity(0.18))
             }
+            // Her persentil kendi serisi: series verilmezse üç çizgi tek çizgi gibi birleşir.
             ForEach(rows, id: \.month) { row in
-                LineMark(x: .value("Ay", row.month), y: .value("P50", row.p50))
+                LineMark(x: .value("Ay", row.month), y: .value("P50", row.p50),
+                         series: .value("Persentil", "P50"))
                     .foregroundStyle(.green)
                     .interpolationMethod(.catmullRom)
             }
             ForEach(rows, id: \.month) { row in
-                LineMark(x: .value("Ay", row.month), y: .value("P3", row.p3))
+                LineMark(x: .value("Ay", row.month), y: .value("P3", row.p3),
+                         series: .value("Persentil", "P3"))
                     .foregroundStyle(.gray)
                     .lineStyle(.init(lineWidth: 1, dash: [3, 3]))
                     .interpolationMethod(.catmullRom)
             }
             ForEach(rows, id: \.month) { row in
-                LineMark(x: .value("Ay", row.month), y: .value("P97", row.p97))
+                LineMark(x: .value("Ay", row.month), y: .value("P97", row.p97),
+                         series: .value("Persentil", "P97"))
                     .foregroundStyle(.gray)
                     .lineStyle(.init(lineWidth: 1, dash: [3, 3]))
                     .interpolationMethod(.catmullRom)

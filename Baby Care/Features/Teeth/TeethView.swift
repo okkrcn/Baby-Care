@@ -31,6 +31,10 @@ struct TeethView: View {
                     ageInMonths: baby.ageInMonths,
                     onSelect: { editingTooth = $0 }
                 )
+                // Harita genişliğe göre ölçeklenir; geniş pencerede (iPhone Duo iç
+                // ekranı, iPad) ekranı taşmasın diye telefon boyutunda tutulur.
+                .frame(maxWidth: 460)
+                .frame(maxWidth: .infinity)
                 .padding(.vertical, 4)
                 legend
             } header: {
